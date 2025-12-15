@@ -1,0 +1,405 @@
+:root {
+    --primary-color: rgb(24, 74, 161);
+    --light-primary-color-1: rgba(24, 74, 161, 0.6);
+    --light-primary-color-2: #65aadd;
+    --secondary-color: #f39800;
+}
+
+body {
+    font-family: "Roboto", serif;
+}
+
+.preloader {
+    background: #c8e8ff;
+}
+
+a.canvasjs-chart-credit {
+    display: none !important;
+}
+
+p {
+    font-size: 15px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: none;
+}
+
+.card.card-primary.card-outline {
+    border-top: 5px solid var(--secondary-color);
+}
+
+.card-primary:not(.card-outline)>.card-header {
+    background-color: var(--secondary-color);
+}
+
+/* FORM VALIDATION */
+.card-footer .btn {
+    min-width: 150px;
+}
+
+.input-error {
+    border: 1px solid red;
+    border-radius: .25rem;
+}
+
+.error-message {
+    color: red;
+    font-size: 15px;
+}
+
+.delete-name {
+    color: red;
+}
+
+/* ASIDE */
+.brand-link {
+    background: var(--primary-color);
+}
+
+.sidebar {
+    /* background-image: linear-gradient(to top left, #cc972a, #272971 60%); */
+    background: var(--light-primary-color-1);
+}
+
+.nav-sidebar .nav-item a p,
+.sidebar .nav-link a i {
+    color: #fff;
+}
+
+.nav-sidebar li.nav-header {
+    font-weight: bold;
+    color: #fff;
+}
+
+.logged-user {
+    display: block;
+}
+
+.logged-user .image,
+.logged-user .info {
+    text-align: center;
+}
+
+.logged-user .image img {
+    width: 80px;
+    height: 80px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.nav-link.active {
+    background-color: var(--light-primary-color-2) !important;
+    color: #fff;
+}
+
+div#sensor-reg-address {
+    margin-left: 30px;
+    background: #f4f6f9;
+    padding: 20px;
+}
+
+/* Card */
+.card-details {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:focus {
+    color: var(--secondary-color);
+}
+
+li.user-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: var(--primary-color);
+    color: #FFF;
+}
+
+li.user-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.circle-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #d1d1d1;
+    color: var(--primary-color);
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* FOOTER */
+footer.main-footer {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/******** DASHBOARD *********/
+.summary-box {
+    margin-bottom: 30px;
+}
+.small-box.bg-white {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 10px 20px
+}
+
+.small-box.bg-white .inner p {
+    margin-bottom: 0px;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    text-align: left;
+}
+
+.small-box.bg-white .inner h3 {
+    margin-bottom: 0px;
+}
+
+.dashboard-card .card-header.ui-sortable-handle {
+    display: flex;
+    align-items: center;
+    background: #184aa1;
+    color: #fff;
+}
+
+.dashboard-card .card {
+    height: 100%;
+    min-height: 475px;
+}
+.dashboard-card .col-12.col-lg-4 {
+    margin-bottom: 30px;
+}
+.dashboard-card .card-header {
+    position: relative;
+    z-index: 1;
+}
+.dashboard-card .card-body {
+    display: flex;
+    align-items: center;
+}
+h1.dashboard-value {
+    font-size: 80px;
+}
+
+.card-box {
+    height: 100%;
+    min-height: 370px;
+    width: 100%;
+}
+.dashboard-card span.odometer-digit {
+    font-size: 95%;
+}
+.odometer-inside {
+    font-family: "Roboto", serif;
+}
+/* Current Month Energy Consumption */
+.currentMonthEnergy {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.currentMonthDate {
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #4a8fc2;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.energy-bg::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: url('../images/dashboard-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.2;
+}
+
+.energy-bg>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* Energy Consumption Per Area */
+.bg-area {
+    background: #4a8fc2;
+    color: #FFF;
+}
+
+/* Carbon Footprint */
+.ghg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ghg h4 {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+}
+
+.ghgday {
+    margin-bottom: 40px;
+}
+
+.ghg .progress-bar {
+    background-color: var(--light-primary-color-2) !important;
+}
+
+/* DASHBOARD PROFILES - ENERGY CONSUMPTION, ACTIVE POWER, VOLTAGE CURRENT */
+ul.dashboard-tabs {
+    background: var(--primary-color);
+    padding: 12px;
+}
+
+.dashboard-tabs li.nav-item {
+    border-right: 1px solid #9f9f9f;
+}
+
+.dashboard-tabs li.nav-item:last-child {
+    border-right: 0px;
+}
+
+.dashboard-tabs .nav-link {
+    border: 0px;
+}
+
+.dashboard-tabs .nav-link:hover {
+    background-color: #fff !important;
+    color: var(--primary-color) !important;
+    border-radius: 0px;
+}
+
+.dashboard-tabs .nav-link.active {
+    background-color: #fff !important;
+    color: var(--primary-color) !important;
+    border: 0px;
+    border-radius: 0px;
+}
+
+/* LOCATION DASHBOARD */
+.location-dashboard-chart {
+    border-top: 5px solid var(--secondary-color);
+    border-radius: .25rem;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+}
+
+div#tree {
+    border-radius: .25rem;
+    box-shadow: 0px 2px 15px 0px #dbdbdb;
+}
+
+.boc-edit-form-header {
+    background: #184aa1 !important;
+    border-radius: 0px !important;
+    padding: 10px !important;
+}
+
+.boc-light .boc-edit-form {
+    border-radius: 0px !important;
+}
+
+.boc-edit-form-close {
+    top: 20px !important;
+}
+.boc-edit-form-header {
+    height: 80px;
+}
+.boc-edit-form-instruments {
+    display:none;
+}
+.boc-form-field {
+    padding: 10px;
+}
+
+.boc-input {
+    border-bottom: 3px solid #f39800;
+    border-radius: 10px;
+    box-shadow: 1px 2px 20px 0px #cdcdcd;
+}
+
+.boc-form-fieldset .boc-form-field .boc-input label.hasval {
+    padding: 12px 20px;
+    color: #184aa1;
+    font-size: 18px;
+}
+
+.boc-form-fieldset .boc-form-field .boc-input input {
+    background: #f4f6f9 !important;
+    padding: 70px 20px 50px 20px;
+    color: #000;
+    font-weight: bold;
+    font-size: 30px;
+    border-radius: 10px;
+}
+/* ENERGY CONSUMPTION */
+.small-box.bg-white .inner p.energy-consumption-date {
+    text-transform: capitalize;
+    font-size: 16px;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+/* SENSOR MODELS */
+#sensor_details .card-header {
+    background-color: var(--light-primary-color-1) !important;
+}
+
+.card-details .fas {
+    padding-right: 5px;
+}
+
+.card-details span {
+    padding-bottom: 1rem;
+}
+
+.separator {
+    border-top: 1px solid #9d9d9d;
+    padding-bottom: 1.25rem;
+}
+
+span.badge {
+    font-size: 1rem;
+    padding: 8px;
+    margin: 3px;
+    font-weight: normal;
+}
+
+.badge-primary {
+    background-color: var(--light-primary-color-1);
+}
+
+#tree .boc-edit-form-instruments {
+    display: none;
+}

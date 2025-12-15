@@ -1,0 +1,67 @@
+@media (min-width: 1111px) and (max-width: 1717px){
+    /* DASHBOARD */
+    .dashboard-card .card-header.ui-sortable-handle {
+        min-height: 75px;
+    }
+    h1.dashboard-value {
+        font-size: 60px;
+    }
+}
+@media (min-width: 1111px) and (max-width: 1187px) {
+    /* DASHBOARD */
+    .currentMonthEnergy {
+        height: 75%;
+    }
+    .currentMonthDate {
+        height: 25%;
+    }
+    .currentMonthDate h4 {
+        font-size: 22px;
+    }
+}
+@media (min-width: 992px) and (max-width: 1110px){
+    /* DASHBOARD */
+    .dashboard-card .card-header.ui-sortable-handle {
+        min-height: 90px;
+    }
+    h1.dashboard-value {
+        font-size: 50px;
+    }
+    .currentMonthEnergy {
+        height: 75%;
+    }
+    .currentMonthDate {
+        height: 25%;
+    }
+    .currentMonthDate h4 {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1126px) {
+    /* DASHBOARD */
+    .small-box.bg-white {
+        display: flex;
+        align-items: center;
+        min-height: 150px;
+    }
+}
+@media (max-width: 991px) {
+    .summary-box .col-lg-4.col-12 {
+        margin-bottom: 20px;
+    }
+}
+@media (max-width: 767px) {
+    .small-box .icon {
+        display: block;
+    }
+    .small-box.bg-white .inner h3 {
+        text-align: left;
+    }
+}
+
+@media (max-width: 370px) {
+    .dashboard-card span.odometer-digit, .dashboard-card span.odometer-formatting-mark {
+        font-size: 50px;
+    }
+}
