@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/dashboard" class="brand-link">
-        <img src="{{ asset('assets/images/siix-logo.png')}}" alt="Logo" class="img-fluid d-flex m-auto" style="padding:10px;width:180px;">
+        <img src="{{ asset('assets/images/SmartPower-logo.png')}}" alt="Logo" class="img-fluid d-flex m-auto" style="padding:10px;width:180px;">
     </a>
 
     <!-- Sidebar -->

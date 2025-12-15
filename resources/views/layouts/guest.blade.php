@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>SIIX - Login</title>
+        <title>Uratex - Login</title>
 
         <!-- Fonts -->
         <link rel="icon" type="image/x-icon" href="{{ asset('assets/images/siix-logo.png')}}">
@@ -24,7 +24,7 @@
             </div>
             <div class="col-lg-4 col-md-5 col-sm-12 login-content">
                 <div class="login-form">
-                    <img src="{{ asset('assets/images/siix-dark-logo.png') }}" class="login-logo">
+                    <img src="{{ asset('assets/images/SmartPower-logo.png') }}" class="login-logo">
                     <p>Welcome! Please enter your credentials to access your account.</p>
                     {{ $slot }}
                 </div>
