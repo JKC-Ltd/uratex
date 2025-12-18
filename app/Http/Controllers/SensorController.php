@@ -237,45 +237,45 @@ class SensorController extends Controller
         // Use IDs 6, 7, 8 for buildings so child locations (with pid 6, 7, 8) can reference them
 
 
-        $b1 = new Sensor();
-        $b1->pid = 2;
-        $b1->name = 'Building 1';
-        $b1->id = 6;
-        $b1->sensor_brand = null;
-        $b1->real_power = null;
-        $b1->daily_consumption = $building1;
-        $b1->tags = ['Building'];
-        $buildingEntries->push($b1);
+        // $b1 = new Sensor();
+        // $b1->pid = 2;
+        // $b1->name = 'Building 1';
+        // $b1->id = 6;
+        // $b1->sensor_brand = null;
+        // $b1->real_power = null;
+        // $b1->daily_consumption = $building1;
+        // $b1->tags = ['Building'];
+        // $buildingEntries->push($b1);
 
-        $b2 = new Sensor();
-        $b2->pid = 2;
-        $b2->name = 'Building 2';
-        $b2->id = 7;
-        $b2->sensor_brand = null;
-        $b2->real_power = null;
-        $b2->daily_consumption = $building2;
-        $b2->tags = ['Building'];
-        $buildingEntries->push($b2);
+        // $b2 = new Sensor();
+        // $b2->pid = 2;
+        // $b2->name = 'Building 2';
+        // $b2->id = 7;
+        // $b2->sensor_brand = null;
+        // $b2->real_power = null;
+        // $b2->daily_consumption = $building2;
+        // $b2->tags = ['Building'];
+        // $buildingEntries->push($b2);
 
-        $b3 = new Sensor();
-        $b3->pid = 2;
-        $b3->name = 'Building 3';
-        $b3->id = 8;
-        $b3->sensor_brand = null;
-        $b3->real_power = null;
-        $b3->daily_consumption = $building3;
-        $b3->tags = ['Building'];
-        $buildingEntries->push($b3);
+        // $b3 = new Sensor();
+        // $b3->pid = 2;
+        // $b3->name = 'Building 3';
+        // $b3->id = 8;
+        // $b3->sensor_brand = null;
+        // $b3->real_power = null;
+        // $b3->daily_consumption = $building3;
+        // $b3->tags = ['Building'];
+        // $buildingEntries->push($b3);
 
-        $ems= new Sensor();
-        $ems->pid = 1;
-        $ems->name = 'EMS';
-        $ems->id = 2;
-        $ems->sensor_brand = null;
-        $ems->real_power = null;
-        $ems->daily_consumption = round($building1 + $building2 + $building3,2);
-        $ems->tags = ['Building'];
-        $buildingEntries->push($ems);   
+        // $ems= new Sensor();
+        // $ems->pid = 1;
+        // $ems->name = 'EMS';
+        // $ems->id = 2;
+        // $ems->sensor_brand = null;
+        // $ems->real_power = null;
+        // $ems->daily_consumption = round($building1 + $building2 + $building3,2);
+        // $ems->tags = ['Building'];
+        // $buildingEntries->push($ems);   
         
         $sensors = $sensors->merge($buildingEntries);
 
