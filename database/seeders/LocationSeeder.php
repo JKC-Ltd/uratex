@@ -30,7 +30,7 @@ class LocationSeeder extends Seeder
                 ["id" => "13", "location_code" => "Powerhouse 3", "location_name" => "Powerhouse 3", "pid" => "3", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
                 ["id" => "14", "location_code" => "Powerhouse 4", "location_name" => "Powerhouse 4", "pid" => "3", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
                 ["id" => "15", "location_code" => "Powerhouse 5", "location_name" => "Powerhouse 5", "pid" => "3", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
-                ["id" => "16", "location_code" => "Plarider",     "location_name" => "Plarider",     "pid" => "1", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
+                ["id" => "16", "location_code" => "Plaridel",     "location_name" => "Plaridel",     "pid" => "1", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
                 ["id" => "17", "location_code" => "Powerhouse 1", "location_name" => "Powerhouse 1", "pid" => "16", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
                 ["id" => "18", "location_code" => "Powerhouse 2", "location_name" => "Powerhouse 2", "pid" => "16", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
                 ["id" => "19", "location_code" => "Powerhouse 3", "location_name" => "Powerhouse 3", "pid" => "16", "created_at" => "2025-03-02 09:32:30", "updated_at" => "2025-03-02 09:32:30", "deleted_at" => null],
