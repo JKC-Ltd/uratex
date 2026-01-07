@@ -53,71 +53,106 @@
                         </p>
                     </a>
                 </li>
-                @if (Auth::user()->userType->name== 'Admin')
-                <li class="nav-header">CONFIGURATIONS</li>
-                <li class="nav-item">
-                    <a href="{{ route('users.index')}}" class="nav-link {{ request()->is('users') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-users"></i>
-                        <p>
-                            Users
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('locations.index') }}" class="nav-link {{ request()->routeIs('locations.index') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-map-pin"></i>
-                        <p>
-                            Locations
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/gateways" class="nav-link {{ request()->is('gateways') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-hdd"></i>
-                        <p>
-                            Gateways
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('sensors.index') }}" class="nav-link {{ request()->routeIs('sensors.index') ? 'active' : '' }}">
-                        <i class="nav-icon fa fa-tablet"></i>
-                        <p>
-                            Sensors
-                        </p>
-                    </a>
-                </li>
-              
-                <li class="nav-item {{ request()->routeIs('sensorTypes.index','sensorModels.index') ? 'menu-is-opening menu-open' : '' }}">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-cog"></i>
-                        <p>
-                            Sensor Configurations
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('sensorTypes.index') }}" class="nav-link {{ request()->routeIs('sensorTypes.index') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Sensor Type</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('sensorModels.index') }}" class="nav-link {{ request()->routeIs('sensorModels.index') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Sensor Model</p>
-                            </a>
-                        </li>
-                        {{-- <li class="nav-item">
+                @if (Auth::user()->userType->name == 'Admin')
+                    <li class="nav-header">CONFIGURATIONS</li>
+                    <li class="nav-item">
+                        <a href="{{ route('users.index') }}"
+                            class="nav-link {{ request()->is('users') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-users"></i>
+                            <p>
+                                Users
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('locations.index') }}"
+                            class="nav-link {{ request()->routeIs('locations.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-map-pin"></i>
+                            <p>
+                                Locations
+                            </p>
+                        </a>
+                    </li>
+                    <li
+                        class="nav-item {{ request()->routeIs('sensorTypes.index', 'sensorModels.index') ? 'menu-is-opening menu-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-cog"></i>
+                            <p>
+                                User Role
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('userTypes.index') }}"
+                                    class="nav-link {{ request()->routeIs('userTypes.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user"></i>
+                                    <p>
+                                        User Types
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('userTypeLocations.index') }}"
+                                    class="nav-link {{ request()->routeIs('userTypeLocations.index') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-shield"></i>
+                                    <p>
+                                        Access Locations
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/gateways" class="nav-link {{ request()->is('gateways') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-hdd"></i>
+                            <p>
+                                Gateways
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('sensors.index') }}"
+                            class="nav-link {{ request()->routeIs('sensors.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-tablet"></i>
+                            <p>
+                                Sensors
+                            </p>
+                        </a>
+                    </li>
+
+                    <li
+                        class="nav-item {{ request()->routeIs('sensorTypes.index', 'sensorModels.index') ? 'menu-is-opening menu-open' : '' }}">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fa fa-cog"></i>
+                            <p>
+                                Sensor Configurations
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('sensorTypes.index') }}"
+                                    class="nav-link {{ request()->routeIs('sensorTypes.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Sensor Type</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('sensorModels.index') }}"
+                                    class="nav-link {{ request()->routeIs('sensorModels.index') ? 'active' : '' }}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Sensor Model</p>
+                                </a>
+                            </li>
+                            {{-- <li class="nav-item">
                             <a href="/sensorRegisters" class="nav-link {{ request()->is('sensorRegisters') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Sensor Register</p>
                             </a>
                         </li> --}}
-                    </ul>
-                </li>
-                
+                        </ul>
+                    </li>
                 @endif
                 
             </ul>
