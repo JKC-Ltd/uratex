@@ -9,7 +9,6 @@ use DB;
 use Illuminate\Http\Request;
 use Response;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Auth;
 class LocationController extends Controller
 {
     /**
@@ -76,7 +75,7 @@ class LocationController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */
+     */  
     public function edit(string $id)
     {
         // $location = Location::findOrFail($id);
@@ -212,24 +211,4 @@ class LocationController extends Controller
 
         return $listOfLocationsParents->sortBy('fullPath')->values()->all();
     }
-
-
-    public function getAllChildrenIds($parentIds)
-    {
-        $allIds = $parentIds;
-
-        do {
-            $children = Location::whereIn('pid', $parentIds)
-                ->pluck('id')
-                ->toArray();
-
-            $parentIds = array_diff($children, $allIds);
-            $allIds = array_merge($allIds, $parentIds);
-
-        } while (!empty($parentIds));
-
-        return array_unique($allIds);
-    }
-
-
 }

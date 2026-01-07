@@ -15,8 +15,6 @@ use App\Http\Controllers\VoltageCurrentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserTypeController;
-use App\Http\Controllers\UserTypeLocationController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -63,8 +61,6 @@ Route::middleware(['auth', 'admin:Admin'])->group(function () {
     Route::resource('sensors', SensorController::class);
     Route::resource('gateways', GatewayController::class);
     Route::resource('users', UserController::class);
-    Route::resource('userTypes', UserTypeController::class);
-    Route::resource('userTypeLocations', UserTypeLocationController::class);
 
     registerCommonRoutes();
 });
