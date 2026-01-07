@@ -19,7 +19,7 @@ class SensorModelSeeder extends Seeder
                 "sensor_model" => "CVM-C10",
                 "sensor_brand" => "Circutor",
                 "sensor_type_id" => 2,
-                "sensor_reg_address" => "62,64,66,2,18,34,48,54,220"
+                "sensor_reg_address" => "62,64,66,2,18,34,48,54,222"
             ],
         ];
 
