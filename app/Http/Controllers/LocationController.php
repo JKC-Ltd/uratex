@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Gateway;
 use App\Models\Location;
+use App\Models\UserTypeLocation;
 use App\Services\SensorOfflineService;
 use DB;
 use Illuminate\Http\Request;
 use Response;
 use Illuminate\Validation\Rule;
+
+
 class LocationController extends Controller
 {
     /**
@@ -75,7 +78,7 @@ class LocationController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     */  
+     */
     public function edit(string $id)
     {
         // $location = Location::findOrFail($id);
@@ -155,27 +158,61 @@ class LocationController extends Controller
 
     public function getLocationChart()
     {
+        $getUserTypeID = auth()->user()->user_type_id;
+
+        $userTypeLocation = UserTypeLocation::where('user_type_id', $getUserTypeID)->first();
+
+        if (!$userTypeLocation || empty($userTypeLocation->locations_list)) {
+            return response()->json([]);
+        }
+
+        $accessLocation = array_map(
+            'intval',
+            explode(',', $userTypeLocation->locations_list)
+        );
+
+        $allLocationIds = $this->getAllLocationIds($accessLocation);
+
+      
         $locations = Location::select('id', 'pid', 'location_name as name')
+            ->whereIn('id', $allLocationIds)
             ->get()
             ->map(function ($location) {
-                $location->tags = ["Location"];
+                $location->tags = ['Location'];
                 return $location;
             });
 
-        return Response::json($locations);
+        return response()->json($locations);
+    }
+
+     private function getAllLocationIds(array $parentIds)
+    {
+        $allIds = $parentIds;
+
+        do {
+            $children = Location::whereIn('pid', $parentIds)
+                ->pluck('id')
+                ->toArray();
+
+            $parentIds = array_diff($children, $allIds);
+            $allIds = array_merge($allIds, $parentIds);
+
+        } while (!empty($parentIds));
+
+        return array_unique($allIds);
     }
 
     // public function getLocationChart()
     // {
     //     // Locations to tag as "Building"
     //     $buildingNames = ['EMS','Building 1', 'Building 2', 'Building 3'];
-    
+
     //     // Locations to exclude by name
     //     $excludedNames = ['SEP', 'injection', 'CIP2', 'Building 4'];
-    
+
     //     // Locations to exclude by ID (6, 7, 8 excluded because they come from sensor chart as buildings)
     //     $excludedIds = [2,6, 7, 8, 9, 10, 15, 16, 19, 18, 20, 25, 26];
-    
+
     //     $locations = Location::select('id', 'pid', 'location_name as name')
     //         ->whereNotIn('location_name', $excludedNames)
     //         ->whereNotIn('id', $excludedIds)
@@ -186,7 +223,7 @@ class LocationController extends Controller
     //                 : ["Location"];
     //             return $location;
     //         });
-    
+
     //     return Response::json($locations);
     // }
 
