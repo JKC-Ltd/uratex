@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sensors', function (Blueprint $table) {
             $table->id();
-            $table->string('slave_address')->unique();
+            $table->string('slave_address');
             $table->longText('description')->nullable();
             $table->foreignId('location_id')->constrained();
             $table->foreignId('gateway_id')->constrained();

@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             SensorTypeSeeder::class,
             LocationSeeder::class,
             SensorModelSeeder::class,
+            GatewaySeeder::class,
+            SensorSeeder::class,
             
         ]);
 

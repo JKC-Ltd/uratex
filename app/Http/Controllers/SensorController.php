@@ -144,7 +144,7 @@ class SensorController extends Controller
     public function formRule($id = false)
     {
         return [
-            'slave_address' => ['required', 'string', 'min:1', 'max:200', Rule::unique('sensors')->ignore($id ? $id : '')],
+            'slave_address' => ['required', 'string', 'min:1', 'max:200'],
             'description' => ['required', 'string', 'min:3', 'max:500'],
             'location_id' => 'required',
             'gateway_id' => 'required',
