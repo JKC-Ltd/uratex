@@ -38,15 +38,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($sensors as $sensor)
-                                @php
-                                    // dd($listOfLocationsParents[$sensor->location_id]); 
-                                @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $sensor->slave_address }}</td>
                                         <td>
-                                            {{ !empty($listOfLocationsParents[$sensor->location_id]['fullPath']) ? $listOfLocationsParents[$sensor->location_id]['fullPath'] .' /' : 'SEP / EMS /' }} 
-                                            <b>{{ $sensor->location->location_name  }}</b>
+                                            {{ !empty($parentlocations[$sensor->location_id])
+                                                ? $parentlocations[$sensor->location_id] . ' /'
+                                                : '' 
+                                                }}
+                                            <b>{{ $sensor->location->location_name }}</b>
                                         </td>
 
                                         <td>{{ $sensor->gateway->gateway_code }}</td>
