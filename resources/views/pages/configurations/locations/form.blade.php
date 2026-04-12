@@ -38,6 +38,21 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="branch_id">Branch</label>
+                                        <select class="form-control select2bs4 @error('branch_id') input-error @enderror" name="branch_id" id="branch_id" style="width: 100%;">
+                                            <option value="">SELECT BRANCH (OPTIONAL)</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}" {{ old('branch_id', isset($location) ? $location->branch_id : null) == $branch->id ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
                                         <label>PARENT LOCATION</label>
                                         <select class="form-control select2bs4 @error('pid') input-error @enderror"
                                             name="pid" style="width: 100%;">

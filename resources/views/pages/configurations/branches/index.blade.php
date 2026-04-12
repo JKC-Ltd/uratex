@@ -4,7 +4,7 @@
 
     </x-slot>
     <x-slot name="pageTitle">
-        Locations
+        Branches
     </x-slot>
     <x-slot name="content">
         <div class="row">
@@ -12,12 +12,12 @@
                 <div class="card card-primary card-outline">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div class="left w-50">
-                            <h3 class="card-title">Location List</h3>
+                            <h3 class="card-title">Branch List</h3>
                         </div>
                         <div class="right w-50 text-right">
-                            <a href="{{ route('locations.create') }}">
+                            <a href="{{ route('branches.create') }}">
                                 <button class="btn btn-primary"><i class="fa fa-plus-square" aria-hidden="true"></i>
-                                    &nbsp;Create New Location</button>
+                                    &nbsp;Create New Branch</button>
                             </a>
                         </div>
                     </div>
@@ -27,34 +27,29 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Location Code</th>
-                                    <th>Location Name</th>
-                                    <th>Branch</th>
-                                    <th>Parent Location</th>                                
+                                    <th>Branch Code</th>
+                                    <th>Branch Name</th>
                                     <th>Last Update</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($locations as $location)
-                                   
+                                @foreach ($branches as $branch)
                                     <tr>
-                                        <td>{{ $location->id }}</td>
-                                        <td>{{ $location->location_code }}</td>
-                                        <td>{{ $location->location_name }}</td>
-                                        <td>{{ optional($location->branch)->name }}</td>
-                                        <td>{{ $listOfLocationsParents[$location->id] ?? '' }}</td>
-                                        <td>{{ $location->updated_at }}</td>
+                                        <td>{{ $branch->id }}</td>
+                                        <td>{{ $branch->branch_code }}</td>
+                                        <td>{{ $branch->name }}</td>
+                                        <td>{{ $branch->updated_at }}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <a href="{{ route('locations.edit', $location->id) }}">
-                                                    <button class="btn btn-primary btn-sm">
+                                                <a href="{{ route('branches.edit', $branch->id) }}">
+                                                    <button class="btn btn-primary btn-sm" type="button">
                                                         <i class="fa fa-pen"></i> Edit
                                                     </button>
                                                 </a>
                                                 <button type="button" class="btn btn-danger btn-sm delete-data-info"
-                                                    data-name="{{ $location->location_name }}"
-                                                    data-id="{{ $location->id }}" data-url="locations/destroy">
+                                                    data-name="{{ $branch->name }}"
+                                                    data-id="{{ $branch->id }}" data-url="branches/destroy">
                                                     <i class="fa fa-trash"></i> Delete
                                                 </button>
                                             </div>
@@ -72,7 +67,7 @@
         @include('includes.datatables-scripts')
         <script src="{{ asset('assets/js/datatables.js') }}"></script>
         <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
-        <script src="{{ asset('/assets/js/sweetalert-delete.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert-delete.js') }}"></script>
         <script>
             $(function() {
                 var Toast = Swal.mixin({

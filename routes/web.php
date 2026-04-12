@@ -6,6 +6,7 @@ use App\Http\Controllers\LocationDashboardController;
 use App\Http\Controllers\EnergyConsumptionController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorModelController;
 use App\Http\Controllers\SensorTypeController;
@@ -57,6 +58,7 @@ function registerCommonRoutes()
 
 Route::middleware(['auth', 'admin:Admin'])->group(function () {
     Route::resource('locations', LocationController::class);
+    Route::resource('branches', BranchController::class);
     Route::resource('sensorModels', SensorModelController::class);
     Route::resource('sensorTypes', SensorTypeController::class);
     Route::resource('sensorRegisters', SensorRegisterController::class);

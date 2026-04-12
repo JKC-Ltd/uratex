@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Gateway;
 use App\Models\Location;
 use App\Models\UserTypeLocation;
@@ -19,8 +20,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-
-        $locations = Location::all();
+        $locations = Location::with('branch')->get();
         $parentPaths = [];
         foreach ($locations as $loc) {
             $chain = Location::getParentLocation($loc->id);
@@ -43,7 +43,8 @@ class LocationController extends Controller
         $listOfLocationsParents = self::getLocationParent();
         return view('pages.configurations.locations.form')
             ->with('listOfLocations', $listOfLocations)
-            ->with('listOfLocationsParents', $listOfLocationsParents);
+            ->with('listOfLocationsParents', $listOfLocationsParents)
+            ->with('branches', Branch::all());
     }
 
     /**
@@ -87,9 +88,11 @@ class LocationController extends Controller
 
         $listOfLocations = Location::findOrFail($id);
         $listOfLocationsParents = self::getLocationParent();
+        $branches = Branch::all();
         return view('pages.configurations.locations.form')
             ->with('location', $listOfLocations)
-            ->with('listOfLocationsParents', $listOfLocationsParents);
+            ->with('listOfLocationsParents', $listOfLocationsParents)
+            ->with('branches', $branches);
     }
 
     /**
@@ -137,7 +140,8 @@ class LocationController extends Controller
         return [
             // 'location_code' => ['required', 'string', 'min:2', 'max:200', Rule::unique('locations')->ignore($id ? $id : "")],
             'location_code' => ['required', 'string', 'min:2', 'max:200'],
-            'location_name' => ['required', 'string', 'min:2', 'max:200']
+            'location_name' => ['required', 'string', 'min:2', 'max:200'],
+            'branch_id' => ['nullable', 'exists:branches,id'],
         ];
     }
     public function errorMessage()
@@ -145,14 +149,16 @@ class LocationController extends Controller
         return [
             'location_code.required' => 'Location code is required',
             // 'location_code.unique' => 'Location code already exists',
-            'location_name.required' => 'Location name is required'
+            'location_name.required' => 'Location name is required',
+            'branch_id.exists' => 'Selected branch does not exist',
         ];
     }
     public function changeAttributes()
     {
         return [
             'location_code' => 'Location Code',
-            'location_name' => 'Location Name'
+            'location_name' => 'Location Name',
+            'branch_id' => 'Branch',
         ];
     }
 

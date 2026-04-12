@@ -14,7 +14,13 @@ class Location extends Model
         'location_code',
         'location_name',
         'pid',
+        'branch_id',
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function parent()
     {

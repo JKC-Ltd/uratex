@@ -73,6 +73,15 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('branches.index') }}"
+                            class="nav-link {{ request()->routeIs('branches.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-code-branch"></i>
+                            <p>
+                                Branches
+                            </p>
+                        </a>
+                    </li>
                     <li
                         class="nav-item {{ request()->routeIs('sensorTypes.index', 'sensorModels.index') ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link">
