@@ -22,6 +22,7 @@ class User extends Authenticatable
         'firstname',
         'lastname',
         'user_type_id',
+        'branch_id',
         'email',
         'password',
     ];
@@ -53,5 +54,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserType::class);
     }
-    
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
 }

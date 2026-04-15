@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserType;
+use App\Models\Branch;
 use DB;
 use Response;
 use App\Services\SensorOfflineService;
@@ -28,7 +29,8 @@ class UserController extends Controller
     public function create()
     {
         $userTypes = UserType::all() ?? collect();
-        return view('pages.configurations.users.form',compact('userTypes')  );
+        $branches = Branch::all() ?? collect();
+        return view('pages.configurations.users.form',compact('userTypes','branches')  );
     }
 
     /**
@@ -59,8 +61,8 @@ class UserController extends Controller
     public function edit( User $user)
     {
         $userTypes = UserType::all() ?? collect();
-        
-        return view('pages.configurations.users.form',compact('user','userTypes')  );
+        $branches = Branch::all() ?? collect();
+        return view('pages.configurations.users.form',compact('user','userTypes','branches')  );
     }
 
     /**
@@ -101,12 +103,16 @@ class UserController extends Controller
     }
 
     public function formRule($id =false){
+        $passwordRules = $id 
+            ? ['nullable','string','min:8','confirmed']
+            : ['required','string','min:8','confirmed'];
+        
         return [
             'firstname' => ['required','string'],
             'lastname' => ['required','string'],
             'user_type_id' => ['required','exists:user_types,id'],
             'email' => ['required','email',Rule::unique('users')->ignore( $id ? $id : "")],
-            'password' => ['required','string','min:8','confirmed'],
+            'password' => $passwordRules,
         ];
     }
 

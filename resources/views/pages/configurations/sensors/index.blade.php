@@ -27,6 +27,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Slave Address</th>
+                                    <th>Branch</th>
                                     <th>Location</th>
                                     <th>Gateway</th>
                                     <th>Sensor Type</th>
@@ -41,6 +42,7 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $sensor->slave_address }}</td>
+                                        <td>{{ $sensor->location->branch->name ?? '' }}</td>  
                                         <td>
                                             {{ !empty($parentlocations[$sensor->location_id])
                                                 ? $parentlocations[$sensor->location_id] . ' /'

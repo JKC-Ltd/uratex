@@ -30,6 +30,7 @@
                                     <th>Lastname Code</th>
                                     <th>Email</th>
                                     <th>User Type</th>
+                                    <th>Branch</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -41,6 +42,7 @@
                                         <td>{{ $user->lastname }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->userType->name }}</td>
+                                        <td>{{ $user->branch ? $user->branch->name : 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('users.edit', $user->id) }}">

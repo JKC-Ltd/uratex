@@ -52,6 +52,23 @@
                                             <div class="error-message">{{ $message }}</div>
                                         @enderror
 
+                                        <label for="branch_id">Branch</label>
+                                        <select
+                                            class="form-control select2bs4 @error('branch_id') input-error @enderror"
+                                            name="branch_id" style="width: 100%;">
+                                            <option value="">SELECT BRANCH</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}"
+                                                    {{ (isset($user) && $user->branch_id == $branch->id) || old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
+
+
                                         <label for="email">Email</label>
                                         <input type="text" name="email"
                                             class="form-control @error('email') input-error @enderror" id="email"
@@ -98,9 +115,9 @@
                 $('.select2bs4').select2({
                     theme: 'bootstrap4'
                 })
-                @if ($errors->has('location_id'))
+                @if ($errors->has('branch_id'))
                     $('.select2bs4').next('.select2').addClass('input-error');
-                @endif
+                @endif  
             });
         </script>
     </x-slot>
