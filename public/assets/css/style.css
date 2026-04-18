@@ -1,8 +1,8 @@
 :root {
-    --primary-color: rgb(24, 74, 161);
-    --light-primary-color-1: rgba(24, 74, 161, 0.6);
+    --primary-color: rgb(0 8 124);
+    --light-primary-color-1: rgba(0, 8, 124, 0.6);
     --light-primary-color-2: #65aadd;
-    --secondary-color: #f39800;
+    --secondary-color: #cd9600;
 }
 
 body {
@@ -403,3 +403,188 @@ span.badge {
 #tree .boc-edit-form-instruments {
     display: none;
 }
+
+.alert-primary {
+    color: #000;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+/* DASHBOARD CORPORATE  */
+.dashboard-corporate-card .card {
+    border-radius: 20px;
+    min-height: 540px;
+}
+.dashboard-alert {
+    bottom: 0;
+}
+.dashboard-alert-icon {
+    background-color: var(--primary-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    padding: 15px;
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.dashboard-corporate-card .card-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+}
+.dashboard-corporate-card .card-header i.card-icon-title {
+    font-size: 25px;
+    background: var(--primary-color);
+    padding: 15px;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.dashboard-corporate-card .card-header h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.dashboard-corporate-card .card-header .currentMonthDate {
+    background: var(--secondary-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    height: unset;
+}
+.dashboard-corporate-card .card-body {
+    padding-bottom: 20px;
+}
+.dashboard-corporate-card .card-body table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 10px;
+}
+.dashboard-corporate-card .card-body table thead tr {
+    background-color: #f3f3f3;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    color: var(--primary-color);
+}
+
+.dashboard-corporate-card .card-body table tbody {
+    display: block;
+    max-height: 265px; 
+    overflow-y: auto;
+}
+
+.dashboard-corporate-card .card-body table tbody tr {
+    border-bottom: 1px solid #f3f3f3;
+}
+
+.dashboard-corporate-card .card-body table tbody tr:last-child {
+    border-bottom:0px;
+}
+
+.dashboard-corporate-card .card-body table tbody tr td.branchname{
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.dashboard-corporate-card .card-body table tbody tr td.branchvalue{
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.dashboard-corporate-card .card-body table tbody tr td.branchvalue span{
+    font-size: 18px;
+}
+
+.dashboard-corporate-card .card-body thead,
+.dashboard-corporate-card .card-body tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.dashboard-corporate-card .card-body table th,
+.dashboard-corporate-card .card-body table td {
+    padding: 15px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.dashboard-corporate-card .card-footer {
+    background-color: #fff;
+}
+
+.dashboard-corporate-card .card-header i.fa-bolt.card-icon-title, .dashboard-branch-card .card-header i.fa-bolt.card-icon-title {
+    padding: 15px 20px;
+}
+/* DASHBOARD BRANCH */
+.dashboard-branch-card .card {
+    border-radius: 20px;
+}
+.dashboard-branch-card .card-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+}
+
+.dashboard-branch-card .card-header {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+}
+.dashboard-branch-card .card-header i.card-icon-title {
+    font-size: 25px;
+    background: var(--primary-color);
+    padding: 15px;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.dashboard-branch-card .card-header h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.dashboard-branch-card .card-body .energy-value {
+    text-align: center;
+}
+
+.dashboard-branch-card .card-body .energy-value h1 {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.dashboard-branch-card .carbon-footprint-value {
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    margin-bottom: 20px;
+}
+
+.dashboard-branch-card .carbon-footprint-value .carbon-footprint-head {
+    background: #e7ffe7;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.dashboard-branch-card .carbon-footprint-value .carbon-footprint-head p {
+    background: #002f00;
+    display: inline-flex;
+    padding: 5px 20px;
+    margin: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 20px;
+}
+.dashboard-branch-card .carbon-footprint-value h1 {
+    padding: 30px 20px;
+}
+.dashboard-branch-card .carbon-footprint-value h1 span {
+    font-size: 15px;
+ }

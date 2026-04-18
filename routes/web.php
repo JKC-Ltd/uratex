@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::view('/dashboardv2', 'pages.dashboardv2');
 function registerCommonRoutes()
 {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,6 +35,8 @@ function registerCommonRoutes()
     Route::resource('energyConsumption', EnergyConsumptionController::class);
     Route::resource('activePower', ActivePowerController::class);
     Route::resource('voltageCurrent', VoltageCurrentController::class);
+
+    Route::get('/locationDashboardv2', [LocationDashboardController::class, 'locationDashboardv2']);
 
     Route::get('/getSensorType/{id}', [SensorModelController::class, 'getSensorType']);
     Route::get('/getSensorModel/{id}', [SensorModelController::class, 'getSensorModel']);
