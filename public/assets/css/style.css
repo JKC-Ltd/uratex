@@ -587,4 +587,27 @@ span.badge {
 }
 .dashboard-branch-card .carbon-footprint-value h1 span {
     font-size: 15px;
- }
+}
+
+.sensor-tabs {
+    border-bottom: 0px;
+}
+
+.sensor-tabs li.nav-item {
+    background: #ededed;
+    border: 1px solid #ededed;
+    margin: 5px;
+    border-radius: 6px;
+}
+
+.sensor-tabs .nav-link {
+    border: 0px;
+    color: #212529;
+}
+
+.sensor-tabs .nav-link.active, .sensor-tabs .nav-link:hover {
+    color: #ffffff;
+    background-color: #00077c !important;
+    border-color: #dee2e6 #dee2e6 #fff;
+    border-radius: 6px;
+}
