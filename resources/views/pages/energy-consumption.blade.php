@@ -8,7 +8,70 @@
     </x-slot>
     <x-slot name="content">
         <!-- Main row -->
-        <div class="row summary-box">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <label class="form-label">BRANCH</label>
+                        <select class="form-control mb-4">
+                            <option value="">-- SELECT BRANCH --</option>
+                            <option value="2">Valenzuela</option>
+                            <option value="3">Plaridel</option>
+                            <option value="3">Alabang</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-9">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-lg-4">
+                                <div class="energy-summary-box esb-border">
+                                    <div class="energy-summary-icon">
+                                        <i class="fa fa-calendar-day"></i>
+                                    </div>
+                                    <div class="energy-summary-details">
+                                        <p class="energy-summary-title">Today's Energy Consumption</p>
+                                        <p class="energy-summary-date" id="dailyEnergyConsumptionDate"></p>
+                                        <h3 id="dailyEnergyConsumption">2,000</h3>
+                                        <span>kWh / day</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <div class="energy-summary-box esb-border">
+                                    <div class="energy-summary-icon">
+                                        <i class="fa fa-calendar-week"></i>
+                                    </div>
+                                    <div class="energy-summary-details">
+                                        <p class="energy-summary-title">Weekly Energy Consumption</p>
+                                        <p class="energy-summary-date" id="weeklyEnergyConsumptionDate"></p>
+                                        <h3 id="weeklyEnergyConsumption">0</h3>
+                                        <i>kWh / week</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <div class="energy-summary-box">
+                                    <div class="energy-summary-icon">
+                                        <i class="fa fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="energy-summary-details">
+                                        <p class="energy-summary-title">Monthly Consumption - Total Facility</p>
+                                        <p class="energy-summary-date" id="monthlyEnergyConsumptionDate"></p>
+                                        <h3 id="monthlyEnergyConsumption">0</h3>
+                                        <i>kWh / month</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- <div class="row summary-box">
             <div class="col-lg-4 col-12">
                 <!-- small box -->
                 <div class="small-box bg-white" style="border-bottom: 8px solid #f39800;">
@@ -50,7 +113,7 @@
                         <i class="fa fa-calendar-alt"></i>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- <section class="col col-lg-4 col-md-4 col-sm-12 connectedSortable">
                 <div class="card">
                     <div class="card-body text-center">
@@ -78,7 +141,7 @@
                     </div>
                 </div>
             </section> --}}
-        </div>
+        {{-- </div> --}}
 
 
 
@@ -111,6 +174,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.5/odometer.min.js"></script>
         <script type="module" src="{{ asset('assets/js/energyConsumptionNonCharts.js') }}?v={{ time() }}"></script>
         <script type="module" src="{{ asset('assets/js/energyConsumptionCharts.js') }}?v={{ time() }}"></script>
-        <script type="module" src="{{ asset('assets/js/energyConsumptionChartsPerBuilding.js') }}?v={{ time() }}"></script>
+        <script type="module" src="{{ asset('assets/js/energyConsumptionChartsPerBuilding.js') }}?v={{ time() }}">
+        </script>
     @endsection
 </x-app-layout>

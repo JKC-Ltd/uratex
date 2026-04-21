@@ -611,3 +611,55 @@ span.badge {
     border-color: #dee2e6 #dee2e6 #fff;
     border-radius: 6px;
 }
+
+/* ENERGY CONSUMPTION */
+.energy-summary-box {
+    display: flex;
+    padding: 0 10px;
+    min-height: 120px;
+}
+div.energy-summary-box.esb-border{
+    border-right: 1px solid #ddd;
+}
+.energy-summary-icon {
+    margin-right: 15px;
+}
+.energy-summary-icon i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color);
+    font-size: 30px;
+    color: #fff;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+}
+
+.energy-summary-details p.energy-summary-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0px;
+    text-transform: uppercase;
+    line-height: 1.2em;
+}
+
+.energy-summary-details p.energy-summary-date {
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 0px;
+
+}
+
+.energy-summary-details h3 {
+    font-size: 30px;
+    font-weight: bold;
+    margin: 5px 0 0 0;
+}
+
+
+.energy-summary-details i {
+    font-size: 14px;
+}
+
