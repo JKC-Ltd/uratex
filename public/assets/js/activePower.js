@@ -121,5 +121,4 @@ $('.nav-link').on('click', function () {
     processActivePowerProfile(activePowerProfileDataId);
 
 });
-
 export { processActivePowerProfile };

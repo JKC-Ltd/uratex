@@ -4,19 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Sensor;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Branch;
 use DB;
 use Illuminate\Http\Request;
 use Response;
+use Illuminate\Support\Facades\Auth;
 
 class VoltageCurrentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
-        $sensors = Sensor::all();
+        // $sensors = Sensor::all();
 
-        return view('pages.voltage-current')
-            ->with('sensors', $sensors);
+        // return view('pages.voltage-current')
+        //     ->with('sensors', $sensors);
+
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $selectedBranchId = $isAdmin ? $request->branch_id : $user?->branch_id;
+
+        $sensorsQuery = Sensor::query();
+
+        if ($selectedBranchId) {
+            $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
+                $query->where('branch_id', $selectedBranchId);
+            });
+        } elseif (!$isAdmin) {
+            $sensorsQuery->whereRaw('1 = 0');
+        }
+
+        $sensors = $sensorsQuery->get();
+        $branches = Branch::orderBy('name')->get();
+
+        return view('pages.active-power')
+            ->with('sensors', $sensors)
+            ->with('branches', $branches)
+            ->with('selectedBranchId', $selectedBranchId)
+            ->with('isAdmin', $isAdmin);
 
     }
 

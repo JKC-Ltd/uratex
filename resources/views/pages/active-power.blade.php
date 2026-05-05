@@ -12,16 +12,25 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <label class="form-label">BRANCH</label>
-                                <select class="form-control">
-                                    <option value="">-- SELECT BRANCH --</option>
-                                    <option value="2">Valenzuela</option>
-                                    <option value="3">Plaridel</option>
-                                    <option value="3">Alabang</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
+                            <form method="GET" action="{{ route('activePower.index') }}" class="col-md-12 p-0">
+                                <div class="row m-0">
+                                    <div class="col-md-3">
+                                        <label class="form-label">BRANCH</label>
+                                        <select class="form-control" id="branch_id" name="branch_id"
+                                            {{ $isAdmin ? '' : 'disabled' }}>
+                                            <option value="">-- SELECT BRANCH --</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}"
+                                                    {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @if (!$isAdmin)
+                                            <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
+                                        @endif
+                                    </div>
+                            {{-- <div class="col-md-3">
                                 <label class="form-label">SENSOR</label>
                                 <select class="form-control">
                                     <option value="">-- SELECT SENSOR --</option>
@@ -29,16 +38,20 @@
                                     <option value="2">MDP 2</option>
                                     <option value="3">MDP 3</option>
                                 </select>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-end px-4" style="border-right: 1px solid #f1f1f1">
-                                <button type="submit" class="btn btn-primary w-100">Submit</button>
-                            </div>
-                            <div class="col-md-4 d-flex align-items-end pl-4">
-                                <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
-                                    <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>Apr 1, 2026 10:00
-                                        AM</b>
+                            </div> --}}
+                                    <div class="col-md-2 d-flex align-items-end px-4" style="border-right: 1px solid #f1f1f1">
+                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                    </div>
+                                    <div class="col-md-3">
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end pl-4">
+                                        <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
+                                            <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>Apr 1, 2026 10:00
+                                                AM</b>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>

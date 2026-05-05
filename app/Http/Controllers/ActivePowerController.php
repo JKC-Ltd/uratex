@@ -2,22 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Gateway;
 use App\Models\Sensor;
 use App\Models\User;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Http\Request;
-use Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class ActivePowerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sensors = Sensor::all();
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $selectedBranchId = $isAdmin ? $request->branch_id : $user?->branch_id;
+
+        $sensorsQuery = Sensor::query();
+
+        if ($selectedBranchId) {
+            $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
+                $query->where('branch_id', $selectedBranchId);
+            });
+        } elseif (!$isAdmin) {
+            $sensorsQuery->whereRaw('1 = 0');
+        }
+
+        $sensors = $sensorsQuery->get();
+        $branches = Branch::orderBy('name')->get();
 
         return view('pages.active-power')
-            ->with('sensors', $sensors);
+            ->with('sensors', $sensors)
+            ->with('branches', $branches)
+            ->with('selectedBranchId', $selectedBranchId)
+            ->with('isAdmin', $isAdmin);
 
     }
 
