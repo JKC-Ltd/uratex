@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SensorDataExport;
+use App\Models\Branch;
 use App\Models\Gateway;
 use App\Models\Sensor;
 use App\Models\User;
@@ -16,6 +17,12 @@ use Response;
 
 class DashboardController extends Controller
 {
+    public function indexV2()
+    {
+        $branches = Branch::all();
+        return view('pages.dashboardv2', compact('branches'));
+    }
+
     /**
      * Display a listing of the resource.
      */

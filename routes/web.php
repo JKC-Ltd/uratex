@@ -25,7 +25,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
-Route::view('/dashboardv2', 'pages.dashboardv2');
+Route::get('/dashboardv2', [DashboardController::class, 'indexV2'])
+    ->middleware(['auth', 'verified'])->name('dashboardv2');
 function registerCommonRoutes()
 {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');

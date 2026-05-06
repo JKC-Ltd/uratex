@@ -7,6 +7,12 @@
         Dashboard
     </x-slot>
     <x-slot name="content">
+        @php
+            $currentUser = auth()->user();
+            $isAdmin = ($currentUser?->userType?->name ?? '') === 'Admin';
+        @endphp
+        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $isAdmin ? '' : ($currentUser?->branch_id ?? '') }}" hidden></div>
+
         <div class="row summary-box">
             <div class="col-lg-4 col-12">
                 <!-- small box -->

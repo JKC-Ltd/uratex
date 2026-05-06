@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Gateway;
 use App\Models\Sensor;
 use App\Models\User;
@@ -14,7 +15,8 @@ class EnergyConsumptionController extends Controller
 {
     public function index()
     {
-        return view('pages.energy-consumption');
+        return view('pages.energy-consumption')
+            ->with('branches', Branch::orderBy('name')->get());
     }
 
     public function getEnergyConsumption(Request $request)
@@ -37,6 +39,10 @@ class EnergyConsumptionController extends Controller
             ->leftJoin('sensor_logs', 'sensor_logs.sensor_id', '=', 'sensors.id')
             ->whereRaw('HOUR(sensor_logs.datetime_created) = 9'); // Get the date on the 9th hour of the day
         // ->where('sensor_logs.datetime_created', '>=', Carbon::now()->subDays(31)); 
+
+        if ($request->branch_id) {
+            $query->where('locations.branch_id', $request->branch_id);
+        }
 
         if ($request->sensor_id) {
             $query->where('sensors.id', $request->sensor_id);

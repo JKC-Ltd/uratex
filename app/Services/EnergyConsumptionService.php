@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Location;
 use App\Models\SensorOffline;
 use DB;
 
@@ -40,6 +41,10 @@ class EnergyConsumptionService
             ->orderBy('sensor_id')
             ->orderBy('reading_date');
 
+        if (!empty($request->branch_id)) {
+            $query->where('locations.branch_id', $request->branch_id);
+        }
+
         if ($request->where) {
             foreach ($request->where as $where) {
                 $query->where($where['field'], $where['operator'], $where['value']);
@@ -65,7 +70,14 @@ class EnergyConsumptionService
         // Expecting an array of root location ids in $request->roots OR
         // a whereIn clause with field 'location_id' (backwards compatibility).
         $roots = [];
-        if (!empty($request->roots) && is_array($request->roots)) {
+        if (!empty($request->branch_id)) {
+            $roots = Location::query()
+                ->where('branch_id', $request->branch_id)
+                ->whereNull('pid')
+                ->pluck('id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        } elseif (!empty($request->roots) && is_array($request->roots)) {
             $roots = array_map('intval', $request->roots);
         } elseif (!empty($request->whereIn) && is_array($request->whereIn)) {
             // look for a location_id whereIn

@@ -1,44 +1,40 @@
 import { setIntervalAtFiveMinuteMarks, charts, fetchData, colorScheme, formatDate, renderChart, getStartEndDate } from './dashboardUtils.js?v=10';
 
 colorScheme();
+const energyContext = document.getElementById('energy-visibility-context');
+const activeBranchId = energyContext?.dataset.branchId || '';
 // Unified processor (same shape as `energyConsumptionCharts.js`)
 const processChartData = (data, refetch, chartID, dataOptions, columnName) => {
-    // Aggregate sensor rows into date -> building sums
+    const rows = Array.isArray(data) ? data : [];
     const byDate = {};
-    (data || []).forEach(r => {
-        const date = r.reading_date;
-        const sensor = Number(r.sensor_id);
-        const val = Number(r.daily_consumption) || 0;
+    const sensorsById = new Map();
+
+    rows.forEach((row) => {
+        const date = row.reading_date;
+        const sensorId = Number(row.sensor_id);
+        const sensorName = row.sensor_description || row.description || `Sensor ${sensorId}`;
+        const value = Number(row.daily_consumption) || 0;
+
         byDate[date] = byDate[date] || {};
-        byDate[date][sensor] = (byDate[date][sensor] || 0) + val;
+        byDate[date][sensorId] = (byDate[date][sensorId] || 0) + value;
+        sensorsById.set(sensorId, sensorName);
     });
 
     const uniqueDates = Object.keys(byDate).sort((a, b) => new Date(a) - new Date(b));
-
-    const buildings = ['Building 1', 'Building 2', 'Building 3'];
+    const sensorIds = [...sensorsById.keys()].sort((a, b) => a - b);
 
     charts[chartID] = charts[chartID] || { options: { data: [] } };
+    charts[chartID].options.data = sensorIds.map((sensorId) => {
+        const sensorName = sensorsById.get(sensorId) || `Sensor ${sensorId}`;
+        const dataPoints = uniqueDates.map((date) => ({
+            label: formatDate(date),
+            y: Number(((byDate[date] || {})[sensorId] || 0).toFixed(2)),
+        }));
 
-    buildings.forEach(building => {
-        // avoid duplicating series on refetch
-        if (charts[chartID].options.data.find(s => s.name === building)) return;
-
-        const dataPoints = uniqueDates.map(date => {
-            const sensors = byDate[date] || {};
-            const b2 = [16, 17, 18].reduce((s, id) => s + (sensors[id] || 0), 0);
-            const b3 = sensors[19] || 0;
-            const s15 = sensors[15] || 0;
-            const b1 = s15 - b2;
-
-            let y = 0;
-            if (building === 'Building 1') y = Number(b1.toFixed(2));
-            if (building === 'Building 2') y = Number(b2.toFixed(2));
-            if (building === 'Building 3') y = Number(b3.toFixed(2));
-
-            return { label: formatDate(date), y };
+        return Object.assign({}, dataOptions, {
+            name: sensorName,
+            dataPoints,
         });
-
-        charts[chartID].options.data.push(Object.assign({}, dataOptions, { name: building, dataPoints }));
     });
 
     if (refetch) charts[chartID].render();
@@ -46,7 +42,7 @@ const processChartData = (data, refetch, chartID, dataOptions, columnName) => {
 };
 
 
-// Create a stacked per-building chart similar to `energyConsumptionCharts.js`.
+// Create a stacked chart that shows all sensors.
 const processDailyEnergyConsumptionPerBuilding = () => {
     const SELECT = `*, ROUND((end_energy - start_energy), 2) AS daily_consumption`;
     const PROCESS_URL = '/getEnergyConsumption';
@@ -55,20 +51,18 @@ const processDailyEnergyConsumptionPerBuilding = () => {
 
     const requestPayload = {
         select: SELECT,
-        whereIn: [
-            { field: 'sensor_id', value: [15, 16, 17, 18, 19] },
-        ],
+        ...(activeBranchId ? { branch_id: activeBranchId } : {}),
     };
 
     const createChartOptions = () => ({
         animationEnabled: true,
         theme: 'light2',
         exportEnabled: true,
-        chartName: 'Daily Energy Consumption - Per Building (Stacked)',
+        chartName: 'Daily Energy Consumption - All Sensors (Stacked)',
         chartProps: { request: requestPayload, processUrl: PROCESS_URL },
         colorSet: 'DailyEnergyColorSet',
         title: {
-            text: "Daily Energy Consumption - Total Facility",
+            text: "Daily Energy Consumption - All Sensors",
             fontSize: 20,
             margin: 30
         },

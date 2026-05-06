@@ -8,22 +8,36 @@
     </x-slot>
     <x-slot name="content">
         <!-- Main row -->
+        @php
+            $currentUser = auth()->user();
+            $isAdmin = ($currentUser?->userType?->name ?? '') === 'Admin';
+            $selectedBranchId = $isAdmin ? request('branch_id') : ($currentUser?->branch_id ?? '');
+        @endphp
+
+        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $selectedBranchId }}" hidden></div>
+
         <div class="row">
-            <div class="col-12 col-lg-3">
-                <div class="card">
-                    <div class="card-body">
-                        <label class="form-label">BRANCH</label>
-                        <select class="form-control mb-4">
-                            <option value="">-- SELECT BRANCH --</option>
-                            <option value="2">Valenzuela</option>
-                            <option value="3">Plaridel</option>
-                            <option value="3">Alabang</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+            @if ($isAdmin)
+                <div class="col-12 col-lg-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <form method="GET" action="{{ route('energyConsumption.index') }}">
+                                <label class="form-label" for="branch_id">BRANCH</label>
+                                <select class="form-control mb-4" id="branch_id" name="branch_id">
+                                    <option value="">-- SELECT BRANCH --</option>
+                                    @foreach ($branches as $branch)
+                                        <option value="{{ $branch->id }}" {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>
+                                            {{ $branch->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12 col-lg-9">
+            @endif
+            <div class="col-12 {{ $isAdmin ? 'col-lg-9' : '' }}">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -156,6 +170,7 @@
         </div>
 
 
+        {{--
         <div class="row">
             <section class="col-12 connectedSortable">
                 <div class="card">
@@ -165,6 +180,7 @@
                 </div>
             </section>
         </div>
+        --}}
 
     </x-slot>
 

@@ -1,13 +1,10 @@
 import { createOdometer, formatDate, setIntervalAtFiveMinuteMarks, getStartEndDate } from './dashboardUtils.js?v=10';
 
-const DEFAULT_WHERE_IN = [
-    {
-        field: 'sensor_id',
-        value: [15, 19],
-    },
-];
+const DEFAULT_WHERE_IN = [];
+const energyContext = document.getElementById('energy-visibility-context');
+const activeBranchId = energyContext?.dataset.branchId || '';
 
-const fetchEnergyConsumption = (select, startDate, endDate, whereIn = DEFAULT_WHERE_IN) => {
+const fetchEnergyConsumption = (select, startDate, endDate, branchId = activeBranchId, whereIn = DEFAULT_WHERE_IN) => {
     return $.ajax({
         type: 'GET',
         url: '/getEnergyConsumption',
@@ -15,6 +12,7 @@ const fetchEnergyConsumption = (select, startDate, endDate, whereIn = DEFAULT_WH
             select,
             startDate,
             endDate,
+            branch_id: branchId || undefined,
             whereIn,
         },
     });
