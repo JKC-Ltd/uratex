@@ -208,12 +208,20 @@ const processVoltageCurrentProfile = (id) => {
 
 // Process for the Previous and Present energy consumption calculation
 
-$('.nav-link').on('click', function () {
+$('.sensor-tabs .nav-link').on('click', function () {
 
     let activePowerProfileDataId = $(this).data('id');
 
     processVoltageCurrentProfile(activePowerProfileDataId);
 
 });
+$(document).ready(function () {
+    const firstSensorTab = $('.sensor-tabs .nav-link[data-id]').first();
 
+    if (firstSensorTab.length) {
+         firstSensorTab.trigger('click');
+        firstSensorTab.tab('show');
+        processVoltageCurrentProfile(firstSensorTab.data('id'));
+    }
+});
 export { processVoltageCurrentProfile };

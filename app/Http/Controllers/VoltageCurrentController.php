@@ -31,19 +31,28 @@ class VoltageCurrentController extends Controller
             $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
                 $query->where('branch_id', $selectedBranchId);
             });
-        } elseif (!$isAdmin) {
+        } else {
             $sensorsQuery->whereRaw('1 = 0');
         }
 
         $sensors = $sensorsQuery->get();
+        $latestLogAt = null;
+
+        if ($sensors->isNotEmpty()) {
+            $latestLogAt = DB::table('sensor_logs')
+                ->whereIn('sensor_id', $sensors->pluck('id'))
+                ->max('datetime_created');
+        }
+
+        $lastUpdate = $latestLogAt ? Carbon::parse($latestLogAt)->format('M j, Y h:i A') : 'N/A';
         $branches = Branch::orderBy('name')->get();
 
-        return view('pages.active-power')
+        return view('pages.voltage-current')
             ->with('sensors', $sensors)
             ->with('branches', $branches)
             ->with('selectedBranchId', $selectedBranchId)
-            ->with('isAdmin', $isAdmin);
-
+            ->with('isAdmin', $isAdmin)
+            ->with('lastUpdate', $lastUpdate);
     }
 
     public function getVoltageCurrentProfile(Request $request)
