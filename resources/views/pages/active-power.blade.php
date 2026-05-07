@@ -8,14 +8,17 @@
     <x-slot name="content">
         {{-- NEW LAYOUT --}}
         <div class="row">
-            <div class="col-12">
+            <div class="col-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <form method="GET" action="{{ route('activePower.index') }}" class="col-md-12 p-0">
                                 <div class="row m-0">
-                                    <div class="col-md-3">
+                                    <div class="col-md-12">
                                         <label class="form-label">BRANCH</label>
+                                        {{-- <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
+                                            <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>{{ $lastUpdate }}</b>
+                                        </div> --}}
                                         <select class="form-control" id="branch_id" name="branch_id"
                                             {{ $isAdmin ? '' : 'disabled' }}>
                                             <option value="">-- SELECT BRANCH --</option>
@@ -30,15 +33,8 @@
                                             <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
                                         @endif
                                     </div>
-                                    <div class="col-md-2 d-flex align-items-end px-4" style="border-right: 1px solid #f1f1f1">
+                                    <div class="col-md-12 mt-4">
                                         <button type="submit" class="btn btn-primary w-100">Submit</button>
-                                    </div>
-                                    <div class="col-md-3">
-                                    </div>
-                                    <div class="col-md-4 d-flex align-items-end pl-4">
-                                        <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
-                                            <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>{{ $lastUpdate }}</b>
-                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -46,9 +42,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
+            <div class="{{ $isAdmin ? 'col-9' : 'col-12' }}">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -57,10 +51,12 @@
                                 <ul class="nav nav-tabs sensor-tabs" id="custom-tabs-five-tab" role="tablist">
                                     @foreach ($sensors as $key => $sensor)
                                         <li class="nav-item">
-                                            <a class="nav-link {{ $key === 0 ? 'active' : '' }}" id="custom-tabs-{{ $sensor->id }}-overlay-tab"
-                                                data-toggle="pill" href="#custom-tabs-{{ $sensor->id }}-overlay"
-                                                role="tab" aria-controls="custom-tabs-{{ $sensor->id }}-overlay"
-                                                aria-selected="{{ $key === 0 ? 'true' : 'false' }}" data-id="{{ $sensor->id }}">
+                                            <a class="nav-link {{ $key === 0 ? 'active' : '' }}"
+                                                id="custom-tabs-{{ $sensor->id }}-overlay-tab" data-toggle="pill"
+                                                href="#custom-tabs-{{ $sensor->id }}-overlay" role="tab"
+                                                aria-controls="custom-tabs-{{ $sensor->id }}-overlay"
+                                                aria-selected="{{ $key === 0 ? 'true' : 'false' }}"
+                                                data-id="{{ $sensor->id }}">
 
                                                 {{ $sensor->description }}
 
@@ -71,7 +67,11 @@
                             </div>
                             <div class="col-md-3 d-flex align-items-center pl-4">
                                 <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
-                                    <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>{{ $lastUpdate }}</b>
+                                    <i class="fa fa-info dashboard-alert-icon mb-2"></i>
+                                    <div>
+                                        <b>Last update:</b>
+                                        <p>{{ $lastUpdate }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -79,6 +79,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+
         </div>
         <div class="row">
             <div class="col-12">
@@ -144,7 +147,7 @@
                 </div>
             </div>
         </div>
-         {{-- END NEW LAYOUT --}}
+        {{-- END NEW LAYOUT --}}
 
         {{-- <div class="row">
             <div class="col-12">

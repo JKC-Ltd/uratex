@@ -22,14 +22,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('locationDashboard.index') }}" class="nav-link {{ request()->routeIs('locationDashboard.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-map-marker-alt"></i>
-                        <p>
-                            Location Dashboard
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('energyConsumption.index') }}" class="nav-link {{ request()->routeIs('energyConsumption.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-bolt"></i>
                         <p>
