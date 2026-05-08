@@ -33,7 +33,7 @@
                                     @enderror
 
 
-                                    <label for="location"> Location</label>
+                                    {{-- <label for="location"> Location</label>
                                     <select class=" form-control select2bs4 select2" id="location" multiple="multiple"
                                         name="location[]" style="width: 100%;" required>
                                         @if (isset($userType))
@@ -50,7 +50,7 @@
                                             @endphp
                                             @foreach ($assignedLocations as $assignedLocation)
                                                 <option selected value="{{ $assignedLocation }}">
-                                                    {{-- {{ $assignedLocation }} --}}
+                                               
                                                     {{ $listOfLocations[$assignedLocation] }}
                                                 </option>
                                             @endforeach
@@ -60,7 +60,7 @@
                                             {{ $listOfLocation }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </select> --}}
                                 
                                 </div>
                             </div>

@@ -55,6 +55,7 @@ const processActivePowerProfile = (id) => {
         return {
             exportEnabled: true,
             animationEnabled: true,
+            zoomEnabled: true,
             chartName: "Active Power Profile",
             chartProps: {
                 request: activePowerProfileRequest,

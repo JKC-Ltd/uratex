@@ -19,15 +19,15 @@ class UserTypeController extends Controller
     public function index()
     {
         $userTypes = UserType::all();
-        $locations = Location::all();
-        $listOfLocations = [];
-        foreach ($locations as $loc) {
-            $chain = Location::getParentLocation(locationId: $loc->id);
-            $names = array_map(fn($p) => $p->location_name, $chain);
-            $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
-        }
+        // $locations = Location::all();
+        // $listOfLocations = [];
+        // foreach ($locations as $loc) {
+        //     $chain = Location::getParentLocation(locationId: $loc->id);
+        //     $names = array_map(fn($p) => $p->location_name, $chain);
+        //     $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
+        // }
 
-        return view('pages.configurations.userTypes.index', compact('userTypes', 'listOfLocations'));
+        return view('pages.configurations.userTypes.index', compact('userTypes'));
     }
 
     /**
@@ -35,14 +35,14 @@ class UserTypeController extends Controller
      */
     public function create()
     {
-        $locations = Location::all();
-        $listOfLocations = [];
-        foreach ($locations as $loc) {
-            $chain = Location::getParentLocation(locationId: $loc->id);
-            $names = array_map(fn($p) => $p->location_name, $chain);
-            $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
-        }
-        return view('pages.configurations.userTypes.form', compact('listOfLocations'));
+        // $locations = Location::all();
+        // $listOfLocations = [];
+        // foreach ($locations as $loc) {
+        //     $chain = Location::getParentLocation(locationId: $loc->id);
+        //     $names = array_map(fn($p) => $p->location_name, $chain);
+        //     $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
+        // }
+        return view('pages.configurations.userTypes.form');
     }
 
     /**
@@ -56,10 +56,10 @@ class UserTypeController extends Controller
         $userType = new UserType($request->all());
         $userType->save();
         // $usrTypeLocations = $request->input('location', []);      
-        $userTypeLocation = new UserTypeLocation();
-        $userTypeLocation->user_type_id = $userType->id;
-        $userTypeLocation->locations_list = implode(',', $request->location);
-        $userTypeLocation->save();
+        // $userTypeLocation = new UserTypeLocation();
+        // $userTypeLocation->user_type_id = $userType->id;
+        // $userTypeLocation->locations_list = implode(',', $request->location);
+        // $userTypeLocation->save();
 
         return redirect()->route('userTypes.index')->with('success', 'User Type created successfully.');
     }
@@ -78,14 +78,14 @@ class UserTypeController extends Controller
     public function edit(UserType $userType)
     {
         $userType = UserType::find($userType->id);
-        $locations = Location::all();
-        $listOfLocations = [];
-        foreach ($locations as $loc) {
-            $chain = Location::getParentLocation(locationId: $loc->id);
-            $names = array_map(fn($p) => $p->location_name, $chain);
-            $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
-        }
-        return view('pages.configurations.userTypes.form', compact('listOfLocations', 'userType', 'locations'));
+        // $locations = Location::all();
+        // $listOfLocations = [];
+        // foreach ($locations as $loc) {
+        //     $chain = Location::getParentLocation(locationId: $loc->id);
+        //     $names = array_map(fn($p) => $p->location_name, $chain);
+        //     $listOfLocations[$loc->id] = implode(' / ', array_merge($names, [$loc->location_name]));
+        // }
+        return view('pages.configurations.userTypes.form', compact( 'userType'));
     }
 
     /**
@@ -96,13 +96,13 @@ class UserTypeController extends Controller
         $request->validate(self::formRule($userType->id), self::errorMessage(), self::changeAttributes());
         $userType->update($request->all());
 
-        $userTypeLocation = UserTypeLocation::where('user_type_id', $userType->id)->first();
-        if (!$userTypeLocation) {
-            $userTypeLocation = new UserTypeLocation();
-            $userTypeLocation->user_type_id = $userType->id;
-        }
-        $userTypeLocation->locations_list = implode(',', $request->location);
-        $userTypeLocation->save();
+        // $userTypeLocation = UserTypeLocation::where('user_type_id', $userType->id)->first();
+        // if (!$userTypeLocation) {
+        //     $userTypeLocation = new UserTypeLocation();
+        //     $userTypeLocation->user_type_id = $userType->id;
+        // }
+        // $userTypeLocation->locations_list = implode(',', $request->location);
+        // $userTypeLocation->save();
 
         return redirect()->route('userTypes.index')->with('success', 'User Type updated successfully.');
     }
@@ -115,8 +115,8 @@ class UserTypeController extends Controller
         DB::enableQueryLog();
         $id = $request->id;
 
-        $locations = UserTypeLocation::where('user_type_id', $id)->first();      
-        $locations->delete();    
+        // $locations = UserTypeLocation::where('user_type_id', $id)->first();      
+        // $locations->delete();    
         
         $userType = $userType = UserType::findOrFail($id);
         $userType->save();
