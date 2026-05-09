@@ -8,25 +8,19 @@
     </x-slot>
     <x-slot name="content">
         <!-- Main row -->
-        @php
-            $currentUser = auth()->user();
-            $isAdmin = ($currentUser?->userType?->name ?? '') === 'Admin';
-            $selectedBranchId = $isAdmin ? request('branch_id') : ($currentUser?->branch_id ?? '');
-        @endphp
-
-        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $selectedBranchId }}" hidden></div>
+        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $selectedBranchId ?? '' }}" hidden></div>
 
         <div class="row">
-            @if ($isAdmin)
+            @if ($isMultiBranch)
                 <div class="col-12 col-lg-3">
                     <div class="card">
                         <div class="card-body">
                             <form method="GET" action="{{ route('energyConsumption.index') }}">
                                 <label class="form-label" for="branch_id">BRANCH</label>
                                 <select class="form-control mb-4" id="branch_id" name="branch_id">
-                                    <option value="">-- SELECT BRANCH --</option>
+                                    <option value="">-- ALL BRANCHES --</option>
                                     @foreach ($branches as $branch)
-                                        <option value="{{ $branch->id }}" {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>
+                                        <option value="{{ $branch->id }}" {{ (string) ($selectedBranchId ?? '') === (string) $branch->id ? 'selected' : '' }}>
                                             {{ $branch->name }}
                                         </option>
                                     @endforeach
@@ -37,7 +31,7 @@
                     </div>
                 </div>
             @endif
-            <div class="col-12 {{ $isAdmin ? 'col-lg-9' : '' }}">
+            <div class="col-12 {{ $isMultiBranch ? 'col-lg-9' : '' }}">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">

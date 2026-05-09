@@ -43,6 +43,8 @@ class EnergyConsumptionService
 
         if (!empty($request->branch_id)) {
             $query->where('locations.branch_id', $request->branch_id);
+        } elseif (!empty($request->branch_ids) && is_array($request->branch_ids)) {
+            $query->whereIn('locations.branch_id', $request->branch_ids);
         }
 
         if ($request->where) {
@@ -73,6 +75,13 @@ class EnergyConsumptionService
         if (!empty($request->branch_id)) {
             $roots = Location::query()
                 ->where('branch_id', $request->branch_id)
+                ->whereNull('pid')
+                ->pluck('id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        } elseif (!empty($request->branch_ids) && is_array($request->branch_ids)) {
+            $roots = Location::query()
+                ->whereIn('branch_id', $request->branch_ids)
                 ->whereNull('pid')
                 ->pluck('id')
                 ->map(fn ($id) => (int) $id)

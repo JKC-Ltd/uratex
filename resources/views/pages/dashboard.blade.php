@@ -9,9 +9,35 @@
     <x-slot name="content">
         @php
             $currentUser = auth()->user();
-            $isAdmin = ($currentUser?->userType?->name ?? '') === 'Admin';
         @endphp
-        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $isAdmin ? '' : ($currentUser?->branch_id ?? '') }}" hidden></div>
+        <div id="energy-visibility-context"
+            data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}"
+            data-branch-id="{{ $selectedBranchId ?? '' }}"
+            hidden></div>
+
+        {{-- Branch filter (admin or multi-branch users) --}}
+        @if($isMultiBranch)
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card mb-0">
+                    <div class="card-body py-2">
+                        <form method="GET" action="{{ route('dashboard') }}" class="d-flex align-items-center flex-wrap" style="gap: 10px;">
+                            <label class="form-label mb-0 font-weight-bold">BRANCH</label>
+                            <select class="form-control" name="branch_id" style="max-width: 260px;">
+                                <option value="">-- ALL BRANCHES --</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ (string)($selectedBranchId ?? '') === (string)$branch->id ? 'selected' : '' }}>
+                                        {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="row summary-box">
             <div class="col-lg-4 col-12">

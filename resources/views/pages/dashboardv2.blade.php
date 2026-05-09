@@ -7,20 +7,37 @@
         Dashboard
     </x-slot>
     <x-slot name="content">
-        @php
-            $currentUser = auth()->user();
-            $isAdmin = ($currentUser?->userType?->name ?? '') === 'Admin';
-        @endphp
-        @php
-            $userBranch = !$isAdmin && $currentUser?->branch ? collect([$currentUser->branch]) : collect([]);
-        @endphp
         <div id="energy-visibility-context"
-            data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}"
-            data-branch-id="{{ $isAdmin ? '' : ($currentUser?->branch_id ?? '') }}"
-            data-branches="{{ $isAdmin ? $branches->toJson() : $userBranch->toJson() }}"
+            data-user-role="{{ $isMultiBranch ? 'Admin' : 'User' }}"
+            data-branch-id="{{ $selectedBranchId ?? '' }}"
+            data-branches="{{ $isMultiBranch ? $branches->toJson() : '[]' }}"
             hidden></div>
 
-        @if($isAdmin)
+        {{-- Branch filter (admin or multi-branch users) --}}
+        @if($isMultiBranch)
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card mb-0">
+                    <div class="card-body py-2">
+                        <form method="GET" action="{{ route('dashboardv2') }}" class="d-flex align-items-center flex-wrap" style="gap: 10px;">
+                            <label class="form-label mb-0 font-weight-bold">BRANCH</label>
+                            <select class="form-control" name="branch_id" style="max-width: 260px;">
+                                <option value="">-- ALL BRANCHES --</option>
+                                @foreach($branches as $branch)
+                                    <option value="{{ $branch->id }}" {{ (string)($selectedBranchId ?? '') === (string)$branch->id ? 'selected' : '' }}>
+                                        {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if($isMultiBranch)
         <div class="row dashboard-corporate-card">
             <div class="col-12 col-lg-8">
                 <div class="card">
@@ -163,7 +180,7 @@
         </div>
         @endif
 
-        @if(!$isAdmin)
+        @if(!$isMultiBranch)
         <div class="row dashboard-branch-card">
             <div class="col-12 col-lg-4">
                 <div class="card">
@@ -281,7 +298,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/odometer.js/0.4.5/odometer.min.js"></script>
         <script type="module" src="{{ asset('assets/js/dashboardNonCharts.js') }}?v={{ time() }}"></script>
         <script type="module" src="{{ asset('assets/js/dashboardCharts.js') }}?v={{ time() }}"></script>
-        @if(!$isAdmin)
+        @if(!$isMultiBranch)
         <script type="module" src="{{ asset('assets/js/energyConsumptionChartsPerBuilding.js') }}?v={{ time() }}"></script>
         @endif
     @endsection

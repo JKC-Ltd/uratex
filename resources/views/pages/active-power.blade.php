@@ -8,6 +8,7 @@
     <x-slot name="content">
         {{-- NEW LAYOUT --}}
         <div class="row">
+            @if($isMultiBranch)
             <div class="col-3">
                 <div class="card">
                     <div class="card-body">
@@ -16,22 +17,15 @@
                                 <div class="row m-0">
                                     <div class="col-md-12">
                                         <label class="form-label">BRANCH</label>
-                                        {{-- <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
-                                            <i class="fa fa-info dashboard-alert-icon"></i> Last update: <b>{{ $lastUpdate }}</b>
-                                        </div> --}}
-                                        <select class="form-control" id="branch_id" name="branch_id"
-                                            {{ $isAdmin ? '' : 'disabled' }}>
-                                            <option value="">-- SELECT BRANCH --</option>
+                                        <select class="form-control" id="branch_id" name="branch_id">
+                                            <option value="">-- ALL BRANCHES --</option>
                                             @foreach ($branches as $branch)
                                                 <option value="{{ $branch->id }}"
-                                                    {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>
+                                                    {{ (string) ($selectedBranchId ?? '') === (string) $branch->id ? 'selected' : '' }}>
                                                     {{ $branch->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @if (!$isAdmin)
-                                            <input type="hidden" name="branch_id" value="{{ $selectedBranchId }}">
-                                        @endif
                                     </div>
                                     <div class="col-md-12 mt-4">
                                         <button type="submit" class="btn btn-primary w-100">Submit</button>
@@ -42,7 +36,8 @@
                     </div>
                 </div>
             </div>
-            <div class="{{ $isAdmin ? 'col-9' : 'col-12' }}">
+            @endif
+            <div class="{{ $isMultiBranch ? 'col-9' : 'col-12' }}">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">

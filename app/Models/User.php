@@ -22,9 +22,9 @@ class User extends Authenticatable
         'firstname',
         'lastname',
         'user_type_id',
-        'branch_id',
         'email',
         'password',
+        'session_token',
     ];
 
     /**
@@ -55,8 +55,8 @@ class User extends Authenticatable
         return $this->belongsTo(UserType::class);
     }
 
-    public function branch()
+    public function branches()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsToMany(Branch::class, 'user_branches');
     }
 }

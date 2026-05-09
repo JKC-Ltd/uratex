@@ -52,19 +52,21 @@
                                             <div class="error-message">{{ $message }}</div>
                                         @enderror
 
-                                        <label for="branch_id">Branch</label>
+                                        <label for="branch_ids">Branch</label>
+                                        @php
+                                            $selectedBranchIds = isset($user) ? $user->branches->pluck('id')->toArray() : old('branch_ids', []);
+                                        @endphp
                                         <select
-                                            class="form-control select2bs4 @error('branch_id') input-error @enderror"
-                                            name="branch_id" style="width: 100%;">
-                                            <option value="">SELECT BRANCH</option>
+                                            class="form-control select2bs4 @error('branch_ids') input-error @enderror"
+                                            name="branch_ids[]" id="branch_ids" style="width: 100%;" multiple>
                                             @foreach ($branches as $branch)
                                                 <option value="{{ $branch->id }}"
-                                                    {{ (isset($user) && $user->branch_id == $branch->id) || old('branch_id') == $branch->id ? 'selected' : '' }}>
+                                                    {{ in_array($branch->id, $selectedBranchIds) ? 'selected' : '' }}>
                                                     {{ $branch->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('branch_id')
+                                        @error('branch_ids')
                                             <div class="error-message">{{ $message }}</div>
                                         @enderror
 
@@ -115,8 +117,8 @@
                 $('.select2bs4').select2({
                     theme: 'bootstrap4'
                 })
-                @if ($errors->has('branch_id'))
-                    $('.select2bs4').next('.select2').addClass('input-error');
+                @if ($errors->has('branch_ids'))
+                    $('#branch_ids').next('.select2').addClass('input-error');
                 @endif  
             });
         </script>

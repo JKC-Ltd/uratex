@@ -40,9 +40,11 @@ class UserController extends Controller
     {
         $request->validate( self::formRule(),self::errorMessage(), self::changeAttributes());
 
-        $user = new User($request->all());
+        $user = new User($request->except(['branch_ids', '_token']));
         
         $user->save();
+
+        $user->branches()->sync($request->input('branch_ids', []));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -81,7 +83,9 @@ class UserController extends Controller
                 'password' => $request->input('password')
             ]);
         }
-        $user->update($request->all());
+        $user->update($request->except(['branch_ids', '_token', '_method']));
+
+        $user->branches()->sync($request->input('branch_ids', []));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }

@@ -8,15 +8,25 @@ use App\Models\Sensor;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Response;
 
 class EnergyConsumptionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? request('branch_id') : $userBranches->first()?->id;
+
         return view('pages.energy-consumption')
-            ->with('branches', Branch::orderBy('name')->get());
+            ->with('branches', $userBranches)
+            ->with('isAdmin', $isAdmin)
+            ->with('isMultiBranch', $isMultiBranch)
+            ->with('selectedBranchId', $selectedBranchId);
     }
 
     public function getEnergyConsumption(Request $request)

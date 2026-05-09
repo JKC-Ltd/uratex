@@ -15,15 +15,16 @@ class VoltageCurrentController extends Controller
 {
     public function index(Request $request)
     {
-
-        // $sensors = Sensor::all();
-
-        // return view('pages.voltage-current')
-        //     ->with('sensors', $sensors);
-
         $user = Auth::user();
         $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
-        $selectedBranchId = $isAdmin ? $request->branch_id : $user?->branch_id;
+        $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $userBranches->first()?->id;
+
+        // For non-admin, ensure the selected branch is within their allowed branches
+        if (!$isAdmin && $selectedBranchId && !$userBranches->pluck('id')->contains((int) $selectedBranchId)) {
+            $selectedBranchId = null;
+        }
 
         $sensorsQuery = Sensor::query();
 
@@ -31,9 +32,16 @@ class VoltageCurrentController extends Controller
             $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
                 $query->where('branch_id', $selectedBranchId);
             });
-        } else {
+        } elseif ($isMultiBranch && !$isAdmin) {
+            // Multi-branch user with no specific branch – show all their branches
+            $branchIds = $userBranches->pluck('id');
+            $sensorsQuery->whereHas('location', function ($query) use ($branchIds) {
+                $query->whereIn('branch_id', $branchIds);
+            });
+        } elseif (!$isAdmin) {
             $sensorsQuery->whereRaw('1 = 0');
         }
+        // Admin with no branch selected: no filter (show all)
 
         $sensors = $sensorsQuery->get();
         $latestLogAt = null;
@@ -45,13 +53,14 @@ class VoltageCurrentController extends Controller
         }
 
         $lastUpdate = $latestLogAt ? Carbon::parse($latestLogAt)->format('M j, Y h:i A') : 'N/A';
-        $branches = Branch::orderBy('name')->get();
+        $branches = $userBranches;
 
         return view('pages.voltage-current')
             ->with('sensors', $sensors)
             ->with('branches', $branches)
             ->with('selectedBranchId', $selectedBranchId)
             ->with('isAdmin', $isAdmin)
+            ->with('isMultiBranch', $isMultiBranch)
             ->with('lastUpdate', $lastUpdate);
     }
 

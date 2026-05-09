@@ -12,33 +12,75 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Response;
 
 class DashboardController extends Controller
 {
-    public function indexV2()
+    public function indexV2(Request $request)
     {
-        $branches = Branch::all();
-        return view('pages.dashboardv2', compact('branches'));
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $branches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $branches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $branches->first()?->id;
+
+        return view('pages.dashboardv2', compact('branches', 'isAdmin', 'isMultiBranch', 'selectedBranchId'));
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $userBranches->first()?->id;
+
         $gateways = Gateway::all();
         $sensors = Sensor::all();
-        $area = Sensor::groupBy('location_id')->where('id', "!=", 15)->get();
+        $area = Sensor::groupBy('location_id')->where('id', '!=', 15)->get();
         $users = User::all();
 
         return view('pages.dashboard')
             ->with('gateways', $gateways)
             ->with('sensors', $sensors)
             ->with('area', $area)
-            ->with('users', $users);
+            ->with('users', $users)
+            ->with('branches', $userBranches)
+            ->with('isAdmin', $isAdmin)
+            ->with('isMultiBranch', $isMultiBranch)
+            ->with('selectedBranchId', $selectedBranchId);
+    }
 
+    /**
+     * Restrict a request's branch scope to what the authenticated user is allowed to see.
+     * Admins are unrestricted. Non-admins are always scoped to their assigned branches.
+     */
+    private function applyBranchRestrictions(Request $request): Request
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return $request;
+        }
+        $isAdmin = $user->userType && $user->userType->name === 'Admin';
+        if ($isAdmin) {
+            return $request;
+        }
+
+        $userBranchIds = $user->branches->pluck('id')->toArray();
+
+        if ($request->branch_id && in_array((int) $request->branch_id, $userBranchIds)) {
+            // Specific allowed branch selected – keep as-is
+            return $request;
+        }
+
+        // No branch selected (or an invalid one) – scope to all user branches
+        $request->merge(['branch_id' => null, 'branch_ids' => $userBranchIds]);
+        return $request;
     }
 
     /**
@@ -97,6 +139,7 @@ class DashboardController extends Controller
         $request->startDate = $startDate;
         $request->endDate = $endDate;
 
+        $request = $this->applyBranchRestrictions($request);
         $energyConsumptionService = (new EnergyConsumptionService)->get($request);
 
         $dailyEnergy = $energyConsumptionService->get();
@@ -134,6 +177,7 @@ class DashboardController extends Controller
         // $request->startDate = "2025-11-30 20:00:00";
         // $request->endDate = "2025-11-30 21:00:00";
 
+        $request = $this->applyBranchRestrictions($request);
         $dailyEnergyPerBuilding = (new EnergyConsumptionService)->getPerBuilding($request);
 
         return Response::json($dailyEnergyPerBuilding);
@@ -141,7 +185,7 @@ class DashboardController extends Controller
 
     public function getEnergyConsumption(Request $request)
     {
-
+        $request = $this->applyBranchRestrictions($request);
         $energyConsumptionService = (new EnergyConsumptionService)->get($request);
 
         $dailyEnergy = $energyConsumptionService->get();
@@ -151,7 +195,7 @@ class DashboardController extends Controller
 
     public function getPower(Request $request)
     {
-
+        $request = $this->applyBranchRestrictions($request);
         $energyConsumptionService = (new EnergyConsumptionService)->getPower($request);
 
         $dailyEnergy = $energyConsumptionService->get();
