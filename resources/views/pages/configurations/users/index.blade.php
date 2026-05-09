@@ -42,7 +42,7 @@
                                         <td>{{ $user->lastname }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->userType->name }}</td>
-                                        <td>{{ $user->branch ? $user->branch->name : 'N/A' }}</td>
+                                        <td>{{ $user->branches->isNotEmpty() ? $user->branches->pluck('name')->join(', ') : 'N/A' }}</td>
                                         <td>
                                             <div class="btn-group">
                                                 <a href="{{ route('users.edit', $user->id) }}">

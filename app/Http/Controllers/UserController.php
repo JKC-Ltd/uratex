@@ -18,9 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all() ?? collect();
-      
-        return view('pages.configurations.users.index',compact('users') );
+        $users = User::with(['userType', 'branches'])->get();
+
+        return view('pages.configurations.users.index', compact('users'));
     }
 
     /**

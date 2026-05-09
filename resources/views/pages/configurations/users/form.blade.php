@@ -38,7 +38,7 @@
 
                                         <label>User Type</label>
                                         <select
-                                            class="form-control select2bs4 @error('user_type_id') input-error @enderror"
+                                            class="form-control select2bs4 select2 @error('user_type_id') input-error @enderror"
                                             name="user_type_id" style="width: 100%;">
                                             <option value="">SELECT USER TYPE</option>
                                             @foreach ($userTypes as $userType)
@@ -57,8 +57,8 @@
                                             $selectedBranchIds = isset($user) ? $user->branches->pluck('id')->toArray() : old('branch_ids', []);
                                         @endphp
                                         <select
-                                            class="form-control select2bs4 @error('branch_ids') input-error @enderror"
-                                            name="branch_ids[]" id="branch_ids" style="width: 100%;" multiple>
+                                            class="form-control select2bs4 select2 @error('branch_ids') input-error @enderror"
+                                            name="branch_ids[]" id="branch_ids" multiple="multiple" style="width: 100%;">
                                             @foreach ($branches as $branch)
                                                 <option value="{{ $branch->id }}"
                                                     {{ in_array($branch->id, $selectedBranchIds) ? 'selected' : '' }}>
@@ -111,16 +111,16 @@
             </div>
         </div>
     </x-slot>
-    <x-slot name="importedScripts">
+    @section('scripts')
         <script>
             $(document).ready(function() {
-                $('.select2bs4').select2({
+                $('.select2').select2({
                     theme: 'bootstrap4'
-                })
+                });
                 @if ($errors->has('branch_ids'))
-                    $('#branch_ids').next('.select2').addClass('input-error');
-                @endif  
+                    $('#branch_ids').next('.select2-container').addClass('input-error');
+                @endif
             });
         </script>
-    </x-slot>
+    @endsection
 </x-app-layout>
