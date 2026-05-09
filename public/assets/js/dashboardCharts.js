@@ -74,23 +74,25 @@ const processPandPEnergyConsumption = () => {
         theme: 'light2',
         colorSet: 'DailyEnergyColorSet',
         title: { fontSize: 20, margin: 30 },
+        axisX: {
+            labelFontSize: 12,
+            labelFontWeight: 'bold',
+        },
         axisY: {
             title: 'Energy (kWh)',
-            titlePadding: { top: 1, bottom: 15 },
             titleFontSize: 15,
             labelFontSize: 12,
-            minimum: 10,
-            labelFontWeight: 'bold',
+            includeZero: true,
         },
         legend: { cursor: 'pointer', verticalAlign: 'bottom', horizontalAlign: 'bottom' },
         data: [],
     });
 
     const createSeriesTemplate = () => ({
-        type: 'column',
+        type: 'bar',
         name: CHART_ID,
         indexLabel: '{y}',
-        indexLabelMaxWidth: 60,
+        indexLabelMaxWidth: 80,
         indexLabelFontColor: '#FFF',
         indexLabelFontSize: 15,
         indexLabelPlacement: 'inside',
@@ -113,21 +115,11 @@ const processDailyEnergyConsumption = () => {
     const PROCESS_URL = '/getEnergyConsumptionPerBuilding';
     const CHART_ID = 'dailyEnergyConsumptionPerMeter';
 
-    const [startDate, endDate] = getStartEndDate(7, 1, 'day', 1);
-
-    const requestPayload = {
-        startDate,
-        endDate,
-        ...(activeBranchId
-            ? { branch_id: activeBranchId }
-            : { roots: [2, 10, 16] }),
-    };
-
     const createChartOptions = () => ({
         animationEnabled: true,
         exportEnabled: true,
         chartName: 'Daily Energy Consumption Per Branch',
-        chartProps: { request: requestPayload, processUrl: PROCESS_URL },
+        chartProps: { processUrl: PROCESS_URL },
         theme: 'light2',
         colorSet: 'DailyEnergyColorSet',
         title: { fontSize: 20, margin: 30 },
@@ -170,14 +162,23 @@ const processDailyEnergyConsumption = () => {
     };
 
     // periodic refetch
-    setIntervalAtFiveMinuteMarks(() => {
-        fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, 'root_location_name', processPerBranch, true);
-        if (charts[CHART_ID]) charts[CHART_ID].render();
-    });
+    const doFetch = (refetch = false) => {
+        const [startDate, endDate] = getStartEndDate(7, 1, 'day', 1);
+        const requestPayload = {
+            startDate,
+            endDate,
+            ...(activeBranchId ? { branch_id: activeBranchId } : { roots: [2, 10, 16] }),
+        };
+        if (charts[CHART_ID]) charts[CHART_ID].options.chartProps = { request: requestPayload, processUrl: PROCESS_URL };
+        fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, 'root_location_name', processPerBranch, refetch);
+        if (refetch && charts[CHART_ID]) charts[CHART_ID].render();
+    };
+
+    setIntervalAtFiveMinuteMarks(() => doFetch(true));
 
     // initialize and do first fetch
     charts[CHART_ID] = { options: createChartOptions() };
-    fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, 'root_location_name', processPerBranch);
+    doFetch();
 };
 
 // Previous & Present Energy Consumption - Per Building (grouped by building on X axis)
@@ -190,21 +191,22 @@ const processPandPEnergyConsumptionPerBuilding = () => {
     const CHART_ID = 'pAndPEnergyConsumptionPerBuilding';
     const LABEL_FIELD = 'reading_date';
 
-    // Mirror PHP getDailyEnergyConsumption: yesterday 7AM → tomorrow 7AM (or -2days → today 7AM before 7AM)
-    const now = moment();
-    const today7AM = now.clone().startOf('day').add(7, 'hours');
-    const startDate = now.isSameOrAfter(today7AM)
-        ? today7AM.clone().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss')
-        : today7AM.clone().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss');
-    const endDate = now.isSameOrAfter(today7AM)
-        ? today7AM.clone().add(1, 'day').format('YYYY-MM-DD HH:mm:ss')
-        : today7AM.format('YYYY-MM-DD HH:mm:ss');
-
+    const getDateWindow = () => {
+        const now = moment();
+        const today7AM = now.clone().startOf('day').add(7, 'hours');
+        return {
+            startDate: now.isSameOrAfter(today7AM)
+                ? today7AM.clone().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss')
+                : today7AM.clone().subtract(2, 'days').format('YYYY-MM-DD HH:mm:ss'),
+            endDate: now.isSameOrAfter(today7AM)
+                ? today7AM.clone().add(1, 'day').format('YYYY-MM-DD HH:mm:ss')
+                : today7AM.format('YYYY-MM-DD HH:mm:ss'),
+        };
+    };
     const requestPayload = {
         roots: [2, 10, 16],
         select: SELECT,
-        startDate,
-        endDate,
+        ...getDateWindow(),
         ...(activeBranchId ? { branch_id: activeBranchId } : {}),
     };
 
@@ -258,14 +260,22 @@ const processPandPEnergyConsumptionPerBuilding = () => {
     };
 
     // periodic refetch
-    setIntervalAtFiveMinuteMarks(() => {
-        fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, LABEL_FIELD, processPerBuilding, true);
-        if (charts[CHART_ID]) charts[CHART_ID].render();
-    });
+    const doFetch = (refetch = false) => {
+        const payload = {
+            roots: [2, 10, 16],
+            select: SELECT,
+            ...getDateWindow(),
+            ...(activeBranchId ? { branch_id: activeBranchId } : {}),
+        };
+        fetchData(payload, createSeriesTemplate(), CHART_ID, PROCESS_URL, LABEL_FIELD, processPerBuilding, refetch);
+        if (refetch && charts[CHART_ID]) charts[CHART_ID].render();
+    };
+
+    setIntervalAtFiveMinuteMarks(() => doFetch(true));
 
     // initialize and perform first fetch
     charts[CHART_ID] = { options: createChartOptions() };
-    fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, LABEL_FIELD, processPerBuilding);
+    doFetch();
 };
 
 processPandPEnergyConsumptionPerBuilding();

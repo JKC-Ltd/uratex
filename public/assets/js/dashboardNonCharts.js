@@ -65,13 +65,13 @@ const processCurrentDayEnergyConsumption = () => {
             ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption
         `;
 
-    const [startDate, endDate] = getStartEndDate(7, 1, 'day', 1);
+    const doFetch = () => {
+        const [startDate, endDate] = getStartEndDate(7, 1, 'day', 1);
+        fetchDataNonCharts(select, startDate, endDate, 'currentDayEnergyConsumption');
+    };
 
-    setIntervalAtFiveMinuteMarks(function () {
-        fetchDataNonCharts(select, startDate, endDate, "currentDayEnergyConsumption");
-    });
-
-    fetchDataNonCharts(select, startDate, endDate, "currentDayEnergyConsumption");
+    setIntervalAtFiveMinuteMarks(doFetch);
+    doFetch();
 };
 
 const processCurrentMonthEnergyConsumption = () => {
@@ -79,13 +79,13 @@ const processCurrentMonthEnergyConsumption = () => {
             ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption
         `;
 
-    const [startDate, endDate] = getStartEndDate(7, 25, 'month', 1);
+    const doFetch = () => {
+        const [startDate, endDate] = getStartEndDate(7, 25, 'month', 1);
+        fetchDataNonCharts(select, startDate, endDate, 'currentMonthEnergyConsumption');
+    };
 
-    setIntervalAtFiveMinuteMarks(function () {
-        fetchDataNonCharts(select, startDate, endDate, "currentMonthEnergyConsumption");
-    });
-
-    fetchDataNonCharts(select, startDate, endDate, "currentMonthEnergyConsumption");
+    setIntervalAtFiveMinuteMarks(doFetch);
+    doFetch();
 };
 
 
@@ -95,16 +95,13 @@ const processCurrentMonthPerBranchEnergyConsumption = () => {
     if (!branches.length) return;
 
     const select = `ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption`;
-    const [startDate, endDate] = getStartEndDate(7, 25, 'month', 1);
-
-    let endDateMoment = moment(endDate);
-    let endDateSub = endDateMoment.clone().subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss');
-    $('#corporateMonthStartDate').text(formatDate(startDate));
-    $('#corporateMonthEndDate').text(formatDate(endDateSub));
-
     const tbody = document.getElementById('corporateMonthlyBranchTableBody');
 
     const fetchPerBranch = () => {
+        const [startDate, endDate] = getStartEndDate(7, 25, 'month', 1);
+        const endDateSub = moment(endDate).subtract(1, 'day').format('YYYY-MM-DD HH:mm:ss');
+        $('#corporateMonthStartDate').text(formatDate(startDate));
+        $('#corporateMonthEndDate').text(formatDate(endDateSub));
         const promises = branches.map(branch =>
             new Promise((resolve, reject) => {
                 fetchEnergyConsumption(select, startDate, endDate, branch.id)
@@ -119,12 +116,26 @@ const processCurrentMonthPerBranchEnergyConsumption = () => {
                 tbody.innerHTML = '';
                 results.forEach(({ branch, data }) => {
                     const consumption = data[0]?.daily_consumption ?? 0;
+
+                    const nameTd = document.createElement('td');
+                    nameTd.className = 'branchname';
+                    nameTd.textContent = branch.name;
+
+                    const valueEl = document.createElement('span');
+                    valueEl.textContent = '0';
+                    const unitSpan = document.createElement('span');
+                    unitSpan.textContent = ' kWh';
+                    const valueTd = document.createElement('td');
+                    valueTd.className = 'branchvalue';
+                    valueTd.appendChild(valueEl);
+                    valueTd.appendChild(unitSpan);
+
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="branchname">${branch.name}</td>
-                        <td class="branchvalue">${Number(consumption).toLocaleString()} <span>kWh</span></td>
-                    `;
+                    tr.appendChild(nameTd);
+                    tr.appendChild(valueTd);
                     tbody.appendChild(tr);
+
+                    createOdometer(valueEl, consumption);
                 });
 
                 const now = new Date();
@@ -149,12 +160,11 @@ const processCarbonFootprintPerBranch = () => {
     if (!branches.length) return;
 
     const select = `ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption`;
-    const [dayStart, dayEnd] = getStartEndDate(7, 1, 'day', 1);
-    const [monthStart, monthEnd] = getStartEndDate(7, 25, 'month', 1);
-
     const tbody = document.getElementById('corporateCarbonFootprintTableBody');
 
     const fetchAll = () => {
+        const [dayStart, dayEnd] = getStartEndDate(7, 1, 'day', 1);
+        const [monthStart, monthEnd] = getStartEndDate(7, 25, 'month', 1);
         const promises = branches.map(branch =>
             new Promise((resolve, reject) => {
                 Promise.all([
@@ -171,17 +181,39 @@ const processCarbonFootprintPerBranch = () => {
                 if (!tbody) return;
                 tbody.innerHTML = '';
                 results.forEach(({ branch, dayData, monthData }) => {
-                    const dayConsumption = dayData[0]?.daily_consumption ?? 0;
-                    const monthConsumption = monthData[0]?.daily_consumption ?? 0;
-                    const ghgDay = Number((dayConsumption * 0.512).toFixed(2)).toLocaleString();
-                    const ghgMonth = Number((monthConsumption * 0.512).toFixed(2)).toLocaleString();
+                    const dayConsumption = Number((dayData[0]?.daily_consumption ?? 0) * 0.512);
+                    const monthConsumption = Number((monthData[0]?.daily_consumption ?? 0) * 0.512);
+
+                    const nameTd = document.createElement('td');
+                    nameTd.className = 'branchname';
+                    nameTd.textContent = branch.name;
+
+                    const dayValueEl = document.createElement('span');
+                    dayValueEl.textContent = '0';
+                    const dayUnit = document.createElement('span');
+                    dayUnit.textContent = ' kg of CO2';
+                    const dayTd = document.createElement('td');
+                    dayTd.className = 'branchvalue';
+                    dayTd.appendChild(dayValueEl);
+                    dayTd.appendChild(dayUnit);
+
+                    const monthValueEl = document.createElement('span');
+                    monthValueEl.textContent = '0';
+                    const monthUnit = document.createElement('span');
+                    monthUnit.textContent = ' kg of CO2';
+                    const monthTd = document.createElement('td');
+                    monthTd.className = 'branchvalue';
+                    monthTd.appendChild(monthValueEl);
+                    monthTd.appendChild(monthUnit);
+
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="branchname">${branch.name}</td>
-                        <td class="branchvalue">${ghgDay} <span>kg of CO2</span></td>
-                        <td class="branchvalue">${ghgMonth} <span>kg of CO2</span></td>
-                    `;
+                    tr.appendChild(nameTd);
+                    tr.appendChild(dayTd);
+                    tr.appendChild(monthTd);
                     tbody.appendChild(tr);
+
+                    createOdometer(dayValueEl, Number(dayConsumption.toFixed(2)));
+                    createOdometer(monthValueEl, Number(monthConsumption.toFixed(2)));
                 });
             })
             .catch(err => console.log(err));

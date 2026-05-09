@@ -250,16 +250,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-12 col-lg-5" style="border-right: 1px solid #f1f1f1">
-                                <div id="pandpEnergyConsumption" class="card-box"></div>
-                            </div>
-                            {{-- <div class="col-12 col-lg-7">
-                                <section class="col-12 connectedSortable">
-                                    <div id="pAndPEnergyConsumptionPerBuilding" class="card-box"></div>
-                                </section>
-                            </div> --}}
-                        </div>
+                        <div id="pandpEnergyConsumption" class="card-box"></div>
                     </div>
                 </div>
                 <div class="card">

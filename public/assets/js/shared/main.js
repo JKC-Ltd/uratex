@@ -37,14 +37,14 @@ const renderChart = (chartID, config) => {
 
         var exportCSV = document.createElement('div');
         var text = document.createTextNode("Export as CSV");
-        exportCSV.setAttribute("style", "padding: 12px 8px; background-color: white; color: black")
+        exportCSV.setAttribute("style", "padding: 12px 8px; background-color: white; color: black; cursor: pointer;")
         exportCSV.appendChild(text);
 
         exportCSV.addEventListener("mouseover", function () {
-            exportCSV.setAttribute("style", "padding: 12px 8px; background-color: #2196F3; color: white")
+            exportCSV.setAttribute("style", "padding: 12px 8px; background-color: #2196F3; color: white; cursor: pointer;")
         });
         exportCSV.addEventListener("mouseout", function () {
-            exportCSV.setAttribute("style", "padding: 12px 8px; background-color: white; color: black")
+            exportCSV.setAttribute("style", "padding: 12px 8px; background-color: white; color: black; cursor: pointer;")
         });
         exportCSV.addEventListener("click", function () {
 
@@ -76,7 +76,10 @@ const renderChart = (chartID, config) => {
 
             // downloadCSV({ filename: "chart-data.csv", chart: chart })
         });
-        toolbarClass.lastChild.appendChild(exportCSV);
+        // CanvasJS toolbar: button (burger icon) | div (dropdown menu)
+        // Append to the dropdown div, not the burger button
+        const dropdownMenu = Array.from(toolbarClass.children).find(el => el.tagName === 'DIV');
+        if (dropdownMenu) dropdownMenu.appendChild(exportCSV);
     }
 
 }
