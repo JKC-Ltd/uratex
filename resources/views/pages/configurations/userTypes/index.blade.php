@@ -28,7 +28,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>User Type</th>
-                                    <th>Locations</th>
+                                    {{-- <th>Locations</th> --}}
                                     <th>Last Update</th>
                                     <th>Actions</th>
                                 </tr>
@@ -41,7 +41,7 @@
                                     <tr>
                                         <td>{{ $userType->id }}</td>
                                         <td>{{ $userType->name }}</td>
-                                        <td>
+                                        {{-- <td>
                                             @if ($userType->userTypeLocations->count() > 0)
                                                 @foreach ($userType->userTypeLocations as $location)
                                                     @foreach (explode(',', $location->locations_list) as $locationName)
@@ -53,7 +53,7 @@
                                             @else
                                                 <span class="badge badge-warning">No Locations Assigned</span>
                                             @endif
-                                        </td>
+                                        </td> --}}
                                         <td>{{ $userType->updated_at }}</td>
                                         <td>
                                             <a href="{{ route('userTypes.edit', $userType->id) }}"

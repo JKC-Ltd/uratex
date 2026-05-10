@@ -14,18 +14,10 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboardv2') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
                             Dashboard
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('locationDashboard.index') }}" class="nav-link {{ request()->routeIs('locationDashboard.index') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-map-marker-alt"></i>
-                        <p>
-                            Location Dashboard
                         </p>
                     </a>
                 </li>
@@ -70,6 +62,15 @@
                             <i class="nav-icon fa fa-map-pin"></i>
                             <p>
                                 Locations
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('branches.index') }}"
+                            class="nav-link {{ request()->routeIs('branches.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-code-branch"></i>
+                            <p>
+                                Branches
                             </p>
                         </a>
                     </li>

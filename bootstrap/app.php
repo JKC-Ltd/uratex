@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminControl::class,
+            'single.session' => \App\Http\Middleware\EnforceSingleSession::class,
+        ]);
+
+        $middleware->appendToGroup('web', [
+            \App\Http\Middleware\EnforceSingleSession::class,
         ]);
     })
 

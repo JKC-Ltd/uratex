@@ -1,6 +1,8 @@
 import { setIntervalAtFiveMinuteMarks, charts, fetchData, colorScheme, formatDate, renderChart, getStartEndDate } from './dashboardUtils.js?v=10';
 
 colorScheme();
+const energyContext = document.getElementById('energy-visibility-context');
+const activeBranchId = energyContext?.dataset.branchId || '';
 
 const processChartData = (data, refetch, chartID, dataOptions, columnName) => {
     let uniqueDates = [...new Set(data.map(item => item.reading_date))].sort((a, b) => a.localeCompare(b));
@@ -44,6 +46,7 @@ const processDailyEnergyConsumptionAllMeters = () => {
 
     const requestPayload = {
         select: SELECT,
+        ...(activeBranchId ? { branch_id: activeBranchId } : {}),
     };
 
     const createChartOptions = () => ({
@@ -130,4 +133,4 @@ const processDailyEnergyConsumptionAllMeters = () => {
 };
 
 // Process for the Previous and Present energy consumption calculation
-processDailyEnergyConsumptionAllMeters();
+// processDailyEnergyConsumptionAllMeters();

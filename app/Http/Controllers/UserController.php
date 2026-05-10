@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UserType;
+use App\Models\Branch;
 use DB;
 use Response;
 use App\Services\SensorOfflineService;
@@ -17,9 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all() ?? collect();
-      
-        return view('pages.configurations.users.index',compact('users') );
+        $users = User::with(['userType', 'branches'])->get();
+
+        return view('pages.configurations.users.index', compact('users'));
     }
 
     /**
@@ -28,7 +29,8 @@ class UserController extends Controller
     public function create()
     {
         $userTypes = UserType::all() ?? collect();
-        return view('pages.configurations.users.form',compact('userTypes')  );
+        $branches = Branch::all() ?? collect();
+        return view('pages.configurations.users.form',compact('userTypes','branches')  );
     }
 
     /**
@@ -38,9 +40,11 @@ class UserController extends Controller
     {
         $request->validate( self::formRule(),self::errorMessage(), self::changeAttributes());
 
-        $user = new User($request->all());
+        $user = new User($request->except(['branch_ids', '_token']));
         
         $user->save();
+
+        $user->branches()->sync($request->input('branch_ids', []));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -59,8 +63,8 @@ class UserController extends Controller
     public function edit( User $user)
     {
         $userTypes = UserType::all() ?? collect();
-        
-        return view('pages.configurations.users.form',compact('user','userTypes')  );
+        $branches = Branch::all() ?? collect();
+        return view('pages.configurations.users.form',compact('user','userTypes','branches')  );
     }
 
     /**
@@ -79,7 +83,9 @@ class UserController extends Controller
                 'password' => $request->input('password')
             ]);
         }
-        $user->update($request->all());
+        $user->update($request->except(['branch_ids', '_token', '_method']));
+
+        $user->branches()->sync($request->input('branch_ids', []));
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -101,12 +107,16 @@ class UserController extends Controller
     }
 
     public function formRule($id =false){
+        $passwordRules = $id 
+            ? ['nullable','string','min:8','confirmed']
+            : ['required','string','min:8','confirmed'];
+        
         return [
             'firstname' => ['required','string'],
             'lastname' => ['required','string'],
             'user_type_id' => ['required','exists:user_types,id'],
             'email' => ['required','email',Rule::unique('users')->ignore( $id ? $id : "")],
-            'password' => ['required','string','min:8','confirmed'],
+            'password' => $passwordRules,
         ];
     }
 

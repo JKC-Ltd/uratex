@@ -9,6 +9,7 @@ use App\Models\SensorType;
 use App\Models\SensorModel;
 use App\Services\EnergyConsumptionService;
 use App\Services\SensorOfflineService;
+use App\Models\Branch;
 use DB;
 use Illuminate\Http\Request;
 use Auth;
@@ -24,10 +25,16 @@ class SensorController extends Controller
     public function index()
     {
         $sensor = Sensor::all();
-        $listOfLocationsParents = self::getLocationParent();
+        $location = Location::all();
+        $parentPaths = [];
+        foreach ($location as $parentlocation) {
+            $chain = Location::getParentLocation($parentlocation->id);
+            $names = array_map(fn($p) => $p->location_name, $chain);
+            $parentPaths[$parentlocation->id] = implode(' / ', $names);
+        }
         return view('pages.configurations.sensors.index')
             ->with('sensors', $sensor)
-            ->with('listOfLocationsParents', $listOfLocationsParents);
+            ->with('parentlocations', $parentPaths);
     }
 
     /**
@@ -38,11 +45,13 @@ class SensorController extends Controller
         $location = Location::all();
         $gateway = Gateway::all();
         $sensorModels = SensorModel::all();
+        $branch = Branch::all();
 
         return view('pages.configurations.sensors.form')
             ->with('locations', $location)
             ->with('gateways', $gateway)
-            ->with('sensorModels', $sensorModels);
+            ->with('sensorModels', $sensorModels)
+            ->with('branches', $branch);
     }
 
     /**
@@ -86,7 +95,7 @@ class SensorController extends Controller
         $location = Location::all();
         $gateway = Gateway::all();
         $sensorModels = SensorModel::all();
-         $listOfLocationsParents = self::getLocationParent();
+        $branch = Branch::all();
         $parentPaths = [];
         foreach ($location as $parentlocation) {
             $chain = Location::getParentLocation($parentlocation->id);
@@ -99,7 +108,8 @@ class SensorController extends Controller
             ->with('parentlocations', $parentPaths)
             ->with('locations', $location)
             ->with('gateways', $gateway)
-            ->with('sensorModels', $sensorModels);
+            ->with('sensorModels', $sensorModels)
+            ->with('branches', $branch);
 
     }
 

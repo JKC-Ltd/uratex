@@ -6,6 +6,7 @@ use App\Http\Controllers\LocationDashboardController;
 use App\Http\Controllers\EnergyConsumptionController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorModelController;
 use App\Http\Controllers\SensorTypeController;
@@ -24,7 +25,8 @@ Route::get('/', function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::get('/dashboardv2', [DashboardController::class, 'indexV2'])
+    ->middleware(['auth', 'verified'])->name('dashboardv2');
 function registerCommonRoutes()
 {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,6 +36,8 @@ function registerCommonRoutes()
     Route::resource('energyConsumption', EnergyConsumptionController::class);
     Route::resource('activePower', ActivePowerController::class);
     Route::resource('voltageCurrent', VoltageCurrentController::class);
+
+    Route::get('/locationDashboardv2', [LocationDashboardController::class, 'locationDashboardv2']);
 
     Route::get('/getSensorType/{id}', [SensorModelController::class, 'getSensorType']);
     Route::get('/getSensorModel/{id}', [SensorModelController::class, 'getSensorModel']);
@@ -57,6 +61,7 @@ function registerCommonRoutes()
 
 Route::middleware(['auth', 'admin:Admin'])->group(function () {
     Route::resource('locations', LocationController::class);
+    Route::resource('branches', BranchController::class);
     Route::resource('sensorModels', SensorModelController::class);
     Route::resource('sensorTypes', SensorTypeController::class);
     Route::resource('sensorRegisters', SensorRegisterController::class);

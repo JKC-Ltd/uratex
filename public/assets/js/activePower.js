@@ -55,6 +55,7 @@ const processActivePowerProfile = (id) => {
         return {
             exportEnabled: true,
             animationEnabled: true,
+            zoomEnabled: true,
             chartName: "Active Power Profile",
             chartProps: {
                 request: activePowerProfileRequest,
@@ -120,6 +121,16 @@ $('.nav-link').on('click', function () {
 
     processActivePowerProfile(activePowerProfileDataId);
 
+});
+
+$(document).ready(function () {
+    const firstSensorTab = $('.sensor-tabs .nav-link[data-id]').first();
+
+    if (firstSensorTab.length) {
+        firstSensorTab.trigger('click');
+        firstSensorTab.tab('show');
+        processActivePowerProfile(firstSensorTab.data('id'));
+    }
 });
 
 export { processActivePowerProfile };

@@ -27,13 +27,32 @@
                                             <div class="error-message">{{ $message }}</div>
                                         @enderror
 
-                                        <label>Location</label>
+                                        <label for="sensor_code">Branch</label>
+                                        @php
+                                            $selectedBranchId = old('branch_id', isset($sensor) ? ($sensor->location->branch->id ?? null) : null);
+                                        @endphp
                                         <select
+                                            class="form-control select2bs4 @error('branch_id') input-error @enderror"
+                                            name="branch_id" style="width: 100%;">
+                                            <option value="">SELECT BRANCH</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}"   
+                                                    {{ (string) $selectedBranchId === (string) $branch->id ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('branch_id')
+                                            <div class="error-message">{{ $message }}</div>
+                                        @enderror
+
+                                        <label>Location</label>
+                                        <select id="location_id"
                                             class="form-control select2bs4 @error('location_id') input-error @enderror"
                                             name="location_id" style="width: 100%;">
                                             <option value="">SELECT LOCATION</option>
                                             @foreach ($locations as $location)
-                                                <option value="{{ $location->id }}"
+                                                <option value="{{ $location->id }}" data-branch-id="{{ $location->branch_id }}"
                                                     {{ old('location_id', isset($sensor) && $sensor->location_id == $location->id ? 'selected' : '') }}>
 
                                                     @php
@@ -117,6 +136,47 @@
                 @if ($errors->has('location_id'))
                     $('.select2bs4').next('.select2').addClass('input-error');
                 @endif
+
+                // Filter locations based on selected branch
+                const branchSelect = $('select[name="branch_id"]');
+                const locationSelect = $('#location_id');
+                const allLocationOptions = locationSelect.find('option').clone();
+
+                function filterLocations() {
+                    const selectedBranchId = branchSelect.val();
+                    
+                    // Clear current options except the first one (SELECT LOCATION)
+                    locationSelect.find('option:not(:first)').remove();
+                    
+                    if (selectedBranchId === '') {
+                        // If no branch selected, show all locations
+                        allLocationOptions.each(function() {
+                            if ($(this).val() !== '') {
+                                locationSelect.append($(this).clone());
+                            }
+                        });
+                    } else {
+                        // If branch selected, show only locations belonging to that branch
+                        allLocationOptions.each(function() {
+                            if ($(this).val() !== '' && $(this).data('branch-id') == selectedBranchId) {
+                                locationSelect.append($(this).clone());
+                            }
+                        });
+                    }
+                    
+                    // Refresh Select2 to update the dropdown
+                    locationSelect.val('').trigger('change');
+                }
+
+                // Event listener for branch selection change
+                branchSelect.on('change', function() {
+                    filterLocations();
+                });
+
+                // Initialize on page load if a branch is already selected (for edit mode)
+                if (branchSelect.val() !== '') {
+                    filterLocations();
+                }
             });
         </script>
     @endsection

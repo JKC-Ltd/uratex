@@ -2,19 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use App\Models\Gateway;
 use App\Models\Sensor;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Response;
 
 class EnergyConsumptionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('pages.energy-consumption');
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? request('branch_id') : $userBranches->first()?->id;
+
+        return view('pages.energy-consumption')
+            ->with('branches', $userBranches)
+            ->with('isAdmin', $isAdmin)
+            ->with('isMultiBranch', $isMultiBranch)
+            ->with('selectedBranchId', $selectedBranchId);
     }
 
     public function getEnergyConsumption(Request $request)
@@ -37,6 +49,10 @@ class EnergyConsumptionController extends Controller
             ->leftJoin('sensor_logs', 'sensor_logs.sensor_id', '=', 'sensors.id')
             ->whereRaw('HOUR(sensor_logs.datetime_created) = 9'); // Get the date on the 9th hour of the day
         // ->where('sensor_logs.datetime_created', '>=', Carbon::now()->subDays(31)); 
+
+        if ($request->branch_id) {
+            $query->where('locations.branch_id', $request->branch_id);
+        }
 
         if ($request->sensor_id) {
             $query->where('sensors.id', $request->sensor_id);

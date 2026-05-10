@@ -1,10 +1,156 @@
 <x-app-layout>
     <x-slot name="pageTitle">
-        Voltage & Current Profile
+        Voltage & Current
     </x-slot>
     <x-slot name="content">
-
+        {{-- NEW LAYOUT --}}
         <div class="row">
+            @if($isMultiBranch)
+            <div class="col-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <form method="GET" action="{{ route('voltageCurrent.index') }}" class="col-md-12 p-0">
+                                <div class="row m-0">
+                                    <div class="col-md-12">
+                                        <label class="form-label">BRANCH</label>
+                                        <select class="form-control" id="branch_id" name="branch_id">
+                                            <option value="">-- ALL BRANCHES --</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}"
+                                                    {{ (string) ($selectedBranchId ?? '') === (string) $branch->id ? 'selected' : '' }}>
+                                                    {{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 mt-4"
+                                        style="border-right: 1px solid #f1f1f1">
+                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+            <div class="{{ $isMultiBranch ? 'col-9' : 'col-12' }}">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9" style="border-right: 1px solid #f1f1f1">
+                                <label class="form-label">SELECT SENSOR</label>
+                                <ul class="nav nav-tabs sensor-tabs" id="custom-tabs-five-tab" role="tablist">
+                                    @foreach ($sensors as $key => $sensor)
+                                        <li class="nav-item">
+                                            <a class="nav-link {{ $key === 0 ? 'active' : '' }}" id="custom-tabs-{{ $sensor->id }}-overlay-tab"
+                                                data-toggle="pill" href="#custom-tabs-{{ $sensor->id }}-overlay"
+                                                role="tab" aria-controls="custom-tabs-{{ $sensor->id }}-overlay"
+                                                aria-selected="{{ $key === 0 ? 'true' : 'false' }}" data-id="{{ $sensor->id }}">
+
+                                                {{ $sensor->description }}
+
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center pl-4">
+                                <div class="alert alert-primary dashboard-alert w-100 mb-0" role="alert">
+                                    <i class="fa fa-info dashboard-alert-icon mb-2"></i> 
+                                    <div>
+                                        <b>Last update:</b> <p>{{ $lastUpdate }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <script>
+                            window.onload = function() {
+
+                                var limit = 50000;
+                                var y = 100;
+                                var data = [];
+                                var dataSeries = {
+                                    type: "line"
+                                };
+                                var dataPoints = [];
+                                for (var i = 0; i < limit; i += 1) {
+                                    y += Math.round(Math.random() * 10 - 5);
+                                    dataPoints.push({
+                                        x: i,
+                                        y: y
+                                    });
+                                }
+                                dataSeries.dataPoints = dataPoints;
+                                data.push(dataSeries);
+
+                                //Better to construct options first and then pass it as a parameter
+                                var options = {
+                                    zoomEnabled: true,
+                                    animationEnabled: true,
+                                    title: {
+                                        text: "Try Zooming - Panning"
+                                    },
+                                    axisY: {
+                                        lineThickness: 1
+                                    },
+                                    data: data // random data
+                                };
+
+                                var chart = new CanvasJS.Chart("chartContainer", options);
+                                var startTime = new Date();
+                                chart.render();
+                                var endTime = new Date();
+                                document.getElementById("timeToRender").innerHTML = "Time to Render: " + (endTime - startTime) + "ms";
+
+                            }
+                        </script>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-five-tabContent">
+                                @foreach ($sensors as $key => $sensor)
+                                    <div class="tab-pane fade {{ $key === 0 ? 'active show' : '' }}"
+                                        id="custom-tabs-{{ $sensor->id }}-overlay" role="tabpanel"
+                                        aria-labelledby="custom-tabs-{{ $sensor->id }}-overlay-tab">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card card-primary">
+                                                    <div class="card-body">
+                                                        <div id="voltageProfile{{ $sensor->id }}"
+                                                            style="height: 520px; width: 100%;"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card card-primary">
+                                                    <div class="card-body">
+                                                        <div id="currentProfile{{ $sensor->id }}"
+                                                            style="height: 520px; width: 100%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        {{-- <div id="chartContainer" style="height: 600px; width: 100%;"></div> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- END NEW LAYOUT --}}
+        {{-- <div class="row">
             <div class="col-12">
                 <div class="card card-primary card-tabs">
                     <div class="card-header p-0 pt-1">
@@ -49,7 +195,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </x-slot>
 
     @section('scripts')

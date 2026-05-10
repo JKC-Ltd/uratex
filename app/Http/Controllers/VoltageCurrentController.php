@@ -4,20 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Models\Sensor;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Branch;
 use DB;
 use Illuminate\Http\Request;
 use Response;
+use Illuminate\Support\Facades\Auth;
 
 class VoltageCurrentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::user();
+        $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
+        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $userBranches->first()?->id;
 
-        $sensors = Sensor::all();
+        // For non-admin, ensure the selected branch is within their allowed branches
+        if (!$isAdmin && $selectedBranchId && !$userBranches->pluck('id')->contains((int) $selectedBranchId)) {
+            $selectedBranchId = null;
+        }
+
+        $sensorsQuery = Sensor::query();
+
+        if ($selectedBranchId) {
+            $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
+                $query->where('branch_id', $selectedBranchId);
+            });
+        } elseif ($isMultiBranch && !$isAdmin) {
+            // Multi-branch user with no specific branch – show all their branches
+            $branchIds = $userBranches->pluck('id');
+            $sensorsQuery->whereHas('location', function ($query) use ($branchIds) {
+                $query->whereIn('branch_id', $branchIds);
+            });
+        } elseif (!$isAdmin) {
+            $sensorsQuery->whereRaw('1 = 0');
+        }
+        // Admin with no branch selected: no filter (show all)
+
+        $sensors = $sensorsQuery->get();
+        $latestLogAt = null;
+
+        if ($sensors->isNotEmpty()) {
+            $latestLogAt = DB::table('sensor_logs')
+                ->whereIn('sensor_id', $sensors->pluck('id'))
+                ->max('datetime_created');
+        }
+
+        $lastUpdate = $latestLogAt ? Carbon::parse($latestLogAt)->format('M j, Y h:i A') : 'N/A';
+        $branches = $userBranches;
 
         return view('pages.voltage-current')
-            ->with('sensors', $sensors);
-
+            ->with('sensors', $sensors)
+            ->with('branches', $branches)
+            ->with('selectedBranchId', $selectedBranchId)
+            ->with('isAdmin', $isAdmin)
+            ->with('isMultiBranch', $isMultiBranch)
+            ->with('lastUpdate', $lastUpdate);
     }
 
     public function getVoltageCurrentProfile(Request $request)
