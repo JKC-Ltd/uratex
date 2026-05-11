@@ -14,12 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminControl::class,
-            'single.session' => \App\Http\Middleware\EnforceSingleSession::class,
+            // 'single.session' => \App\Http\Middleware\EnforceSingleSession::class, // DISABLED - re-enable when ready
         ]);
 
-        $middleware->appendToGroup('web', [
-            \App\Http\Middleware\EnforceSingleSession::class,
-        ]);
+        // Single session enforcement - DISABLED - re-enable when ready
+        // $middleware->appendToGroup('web', [
+        //     \App\Http\Middleware\EnforceSingleSession::class,
+        // ]);
     })
 
     ->withExceptions(function (Exceptions $exceptions) {
