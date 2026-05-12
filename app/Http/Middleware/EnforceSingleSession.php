@@ -19,21 +19,22 @@ class EnforceSingleSession
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $sessionToken = $request->session()->get('session_token');
-
-            // The session token in this browser must match what's in the DB.
-            // If they differ the user has been logged out (e.g. admin action).
-            if ($user->session_token !== $sessionToken) {
-                Auth::guard('web')->logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-
-                return redirect()->route('login')
-                    ->withErrors(['email' => 'Your session is no longer valid. Please log in again.']);
-            }
-        }
+        // Single session enforcement - DISABLED - re-enable when ready
+        // if (Auth::check()) {
+        //     $user = Auth::user();
+        //     $sessionToken = $request->session()->get('session_token');
+        //
+        //     // The session token in this browser must match what's in the DB.
+        //     // If they differ the user has been logged out (e.g. admin action).
+        //     if ($user->session_token !== $sessionToken) {
+        //         Auth::guard('web')->logout();
+        //         $request->session()->invalidate();
+        //         $request->session()->regenerateToken();
+        //
+        //         return redirect()->route('login')
+        //             ->withErrors(['email' => 'Your session is no longer valid. Please log in again.']);
+        //     }
+        // }
 
         return $next($request);
     }
