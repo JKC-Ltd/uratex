@@ -53,7 +53,7 @@
                                                 aria-selected="{{ $key === 0 ? 'true' : 'false' }}"
                                                 data-id="{{ $sensor->id }}">
 
-                                                {{ $sensor->description }}
+                                                {{ $sensor->sensor_name }}
 
                                             </a>
                                         </li>

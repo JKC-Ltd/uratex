@@ -1,7 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="/dashboard" class="brand-link">
-        <img src="{{ asset('assets/images/SmartPower-logo.png')}}" alt="Logo" class="img-fluid d-flex m-auto" style="padding:10px;width:180px;">
+        <img src="{{ asset('assets/images/SmartPower-logo.png') }}" alt="Logo" class="img-fluid d-flex m-auto"
+            style="padding:10px;width:180px;">
     </a>
 
     <!-- Sidebar -->
@@ -14,7 +15,8 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{{ route('dashboardv2') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboardv2') }}"
+                        class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
                             Dashboard
@@ -22,7 +24,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('energyConsumption.index') }}" class="nav-link {{ request()->routeIs('energyConsumption.index') ? 'active' : '' }}">
+                    <a href="{{ route('energyConsumption.index') }}"
+                        class="nav-link {{ request()->routeIs('energyConsumption.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-bolt"></i>
                         <p>
                             Energy Consumption
@@ -30,7 +33,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('activePower.index') }}" class="nav-link {{ request()->routeIs('activePower.index') ? 'active' : '' }}">
+                    <a href="{{ route('activePower.index') }}"
+                        class="nav-link {{ request()->routeIs('activePower.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-plug"></i>
                         <p>
                             Active Power
@@ -38,7 +42,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('voltageCurrent.index') }}" class="nav-link {{ request()->routeIs('voltageCurrent.index') ? 'active' : '' }}">
+                    <a href="{{ route('voltageCurrent.index') }}"
+                        class="nav-link {{ request()->routeIs('voltageCurrent.index') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Voltage & Current
@@ -57,20 +62,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('locations.index') }}"
-                            class="nav-link {{ request()->routeIs('locations.index') ? 'active' : '' }}">
-                            <i class="nav-icon fa fa-map-pin"></i>
-                            <p>
-                                Locations
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a href="{{ route('branches.index') }}"
                             class="nav-link {{ request()->routeIs('branches.index') ? 'active' : '' }}">
                             <i class="nav-icon fa fa-code-branch"></i>
                             <p>
                                 Branches
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('locations.index') }}"
+                            class="nav-link {{ request()->routeIs('locations.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-map-pin"></i>
+                            <p>
+                                Locations
                             </p>
                         </a>
                     </li>
@@ -155,7 +160,7 @@
                         </ul>
                     </li>
                 @endif
-                
+
             </ul>
         </nav>
     </div>

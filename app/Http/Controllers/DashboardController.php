@@ -176,10 +176,10 @@ class DashboardController extends Controller
 
         // $request->startDate = "2025-11-30 20:00:00";
         // $request->endDate = "2025-11-30 21:00:00";
-
+        
         $request = $this->applyBranchRestrictions($request);
         $dailyEnergyPerBuilding = (new EnergyConsumptionService)->getPerBuilding($request);
-
+        
         return Response::json($dailyEnergyPerBuilding);
     }
 
@@ -191,6 +191,7 @@ class DashboardController extends Controller
         $dailyEnergy = $energyConsumptionService->get();
 
         return Response::json($dailyEnergy);
+        
     }
 
     public function getPower(Request $request)

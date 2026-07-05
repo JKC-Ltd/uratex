@@ -3,6 +3,22 @@ import { setIntervalAtFiveMinuteMarks, charts, fetchData, colorScheme, formatDat
 colorScheme();
 const dashboardContext = document.getElementById('energy-visibility-context');
 const activeBranchId = dashboardContext?.dataset.branchId || '';
+const userRole = (dashboardContext?.dataset.userRole || '').toLowerCase();
+const isAdmin = userRole === 'admin';
+const availableBranchIds = (() => {
+    const rawBranches = dashboardContext?.dataset.branches;
+    if (!rawBranches) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(rawBranches)
+            .map((branch) => String(branch.id))
+            .filter(Boolean);
+    } catch (error) {
+        return [];
+    }
+})();
 
 const processChartData = (rows, shouldRefetch, chartId, seriesTemplate, labelField) => {
     const now = new Date();
@@ -167,19 +183,23 @@ const processDailyEnergyConsumption = () => {
         const requestPayload = {
             startDate,
             endDate,
-            ...(activeBranchId ? { branch_id: activeBranchId } : { roots: [2, 10, 16] }),
+            ...(activeBranchId ? { branch_id: activeBranchId } : {}),
+            ...(!activeBranchId && !isAdmin && availableBranchIds.length ? { branch_ids: availableBranchIds } : {}),
+            ...(!activeBranchId && isAdmin ? { roots: [2, 10, 16] } : {}),
         };
         if (charts[CHART_ID]) charts[CHART_ID].options.chartProps = { request: requestPayload, processUrl: PROCESS_URL };
         fetchData(requestPayload, createSeriesTemplate(), CHART_ID, PROCESS_URL, 'root_location_name', processPerBranch, refetch);
         if (refetch && charts[CHART_ID]) charts[CHART_ID].render();
     };
-
+    
     setIntervalAtFiveMinuteMarks(() => doFetch(true));
 
     // initialize and do first fetch
     charts[CHART_ID] = { options: createChartOptions() };
     doFetch();
+  
 };
+
 
 // Previous & Present Energy Consumption - Per Building (grouped by building on X axis)
 const processPandPEnergyConsumptionPerBuilding = () => {

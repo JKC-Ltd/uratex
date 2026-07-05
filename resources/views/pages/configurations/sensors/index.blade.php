@@ -52,6 +52,7 @@
                                         </td>
 
                                         <td>{{ $sensor->gateway->gateway_code }}</td>
+                                        {{-- <td></td> --}}
                                         <td>{{ $sensor->sensorModel->sensorType->sensor_type_code }}</td>
                                         </td>
                                         <td>{{ $sensor->sensorModel->sensor_model }} -

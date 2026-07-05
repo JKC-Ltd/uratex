@@ -60,10 +60,11 @@ class SensorController extends Controller
     public function store(Request $request)
     {
         $request->validate(self::formRule(), self::errorMessage(), self::changeAttributes());
-
+        
         DB::enableQueryLog();
-
         $sensor = new Sensor($request->all());
+        $branchCode = Branch::whereKey($request->branch_id)->value('branch_code');
+        $sensor->sensor_name = $branchCode ? ($branchCode . '-' . $request->description) : $request->description;
         $sensor->save();
 
         $gateways = Gateway::all();
@@ -121,7 +122,11 @@ class SensorController extends Controller
 
         $request->validate(self::formRule($sensor->id), self::errorMessage(), self::changeAttributes());
         DB::enableQueryLog();
-        $sensor->update($request->all());
+        $sensor->fill($request->all());
+
+        $branchCode = Branch::whereKey($request->branch_id)->value('branch_code');
+        $sensor->sensor_name = $branchCode ? ($branchCode . '-' . $request->description) : $request->description;
+        $sensor->save();
 
         $gateways = Gateway::all();
 
@@ -156,6 +161,7 @@ class SensorController extends Controller
         return [
             'slave_address' => ['required', 'string', 'min:1', 'max:200'],
             'description' => ['required', 'string', 'min:3', 'max:500'],
+            'branch_id' => ['required', 'exists:branches,id'],
             'location_id' => 'required',
             'gateway_id' => 'required',
             'sensor_model_id' => 'required',
@@ -167,6 +173,7 @@ class SensorController extends Controller
         return [
             'slave_address.required' => 'Slave Address is required',
             'description.required' => 'Description is required',
+            'branch_id.required' => 'Branch is required',
             'location_id.required' => 'Location is required',
             'gateway_id.required' => 'Gateway is required',
             'sensor_model_id.required' => 'Sensor Model is required',
@@ -178,6 +185,7 @@ class SensorController extends Controller
         return [
             'slave_address' => 'Slave Address',
             'description' => 'Description',
+            'branch_id' => 'Branch',
             'location_id' => 'Location',
             'gateway_id' => 'Gateway',
             'sensor_model_id' => 'Sensor Model',

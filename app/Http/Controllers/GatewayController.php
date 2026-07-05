@@ -120,6 +120,7 @@ class GatewayController extends Controller
             'gateway_code.unique' => 'Gateway code already exists',
             'customer_code.required' => 'Customer code is required',
             'gateway.required' => 'Gateway is required',
+            'description.required' => 'Description is required',
             'description.max' => 'Description is too long',
             
         ];

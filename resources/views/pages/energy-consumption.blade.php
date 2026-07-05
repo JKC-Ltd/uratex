@@ -8,7 +8,11 @@
     </x-slot>
     <x-slot name="content">
         <!-- Main row -->
-        <div id="energy-visibility-context" data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}" data-branch-id="{{ $selectedBranchId ?? '' }}" hidden></div>
+        <div id="energy-visibility-context"
+            data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}"
+            data-branch-id="{{ $selectedBranchId ?? '' }}"
+            data-branches="{{ $branches->toJson() }}"
+            hidden></div>
 
         <div class="row">
             @if ($isMultiBranch)
@@ -150,7 +154,6 @@
                 </div>
             </section> --}}
         {{-- </div> --}}
-
 
 
         <div class="row">

@@ -8,9 +8,9 @@
     </x-slot>
     <x-slot name="content">
         <div id="energy-visibility-context"
-            data-user-role="{{ $isMultiBranch ? 'Admin' : 'User' }}"
+             data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}"
             data-branch-id="{{ $selectedBranchId ?? '' }}"
-            data-branches="{{ $isMultiBranch ? $branches->toJson() : '[]' }}"
+            data-branches="{{ $branches->toJson() }}"
             hidden></div>
 
         {{-- Branch filter (admin or multi-branch users) --}}

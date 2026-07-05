@@ -4,7 +4,7 @@ colorScheme();
 
 const processData = (data, refetch, chartID, dataOptions, columnName) => {
     console.log(`Processing data for chart: ${chartID}`);
-    console.log(data);
+    // console.log(data);
 
     let dateToday = new Date();
     dateToday.setHours(dateToday.getHours() - 7); // Deduct 7 hours
@@ -114,10 +114,10 @@ const processActivePowerProfile = (id) => {
 // Process for the Previous and Present energy consumption calculation
 
 $('.nav-link').on('click', function () {
-    console.log('Nav link clicked');
+    // console.log('Nav link clicked');
 
     let activePowerProfileDataId = $(this).data('id');
-    console.log(`Active power profile data ID: ${activePowerProfileDataId}`);
+    // console.log(`Active power profile data ID: ${activePowerProfileDataId}`);
 
     processActivePowerProfile(activePowerProfileDataId);
 

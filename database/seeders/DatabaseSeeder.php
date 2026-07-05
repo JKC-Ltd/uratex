@@ -23,9 +23,11 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+
             UserTypeSeeder::class,
             UserSeeder::class,
             SensorTypeSeeder::class,
+            BranchSeeder::class,
             LocationSeeder::class,
             SensorModelSeeder::class,
             GatewaySeeder::class,
