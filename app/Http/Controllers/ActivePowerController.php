@@ -16,8 +16,10 @@ class ActivePowerController extends Controller
 {
     public function index(Request $request)
     {
+        /** @var User|null $user */
         $user = Auth::user();
         $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $isUserTypeUser = $user && $user->userType && $user->userType->name === 'User';
         $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
         $isMultiBranch = $isAdmin || $userBranches->count() > 1;
         $selectedBranchId = $isMultiBranch ? $request->branch_id : $userBranches->first()?->id;
@@ -39,10 +41,11 @@ class ActivePowerController extends Controller
             $sensorsQuery->whereHas('location', function ($query) use ($branchIds) {
                 $query->whereIn('branch_id', $branchIds);
             });
-        } elseif (!$isAdmin) {
+        } elseif (!$isAdmin && !($isUserTypeUser && $userBranches->isEmpty())) {
             $sensorsQuery->whereRaw('1 = 0');
         }
         // Admin with no branch selected: no filter (show all)
+        // User type "User" with no branch assigned: no filter (show all)
 
         $sensors = $sensorsQuery->get();
         $latestLogAt = null;

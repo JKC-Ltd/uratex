@@ -7,6 +7,7 @@
     </x-slot>
     <x-slot name="content">
         {{-- NEW LAYOUT --}}
+        
         <div class="row">
             @if($isMultiBranch)
             <div class="col-3">
