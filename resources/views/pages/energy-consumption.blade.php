@@ -47,7 +47,7 @@
                                     <div class="energy-summary-details">
                                         <p class="energy-summary-title">Today's Energy Consumption</p>
                                         <p class="energy-summary-date" id="dailyEnergyConsumptionDate"></p>
-                                        <h3 id="dailyEnergyConsumption">2,000</h3>
+                                        <h3 id="dailyEnergyConsumption">0</h3>
                                         <span>kWh / day</span>
                                     </div>
                                 </div>
