@@ -3,6 +3,15 @@ import { createOdometer, formatDate, setIntervalAtFiveMinuteMarks, getStartEndDa
 const DEFAULT_WHERE_IN = [];
 const dashboardContext = document.getElementById('energy-visibility-context');
 const activeBranchId = dashboardContext?.dataset.branchId || '';
+const availableBranches = JSON.parse(dashboardContext?.dataset.branches || '[]');
+
+const getVisibleBranches = () => {
+    if (!activeBranchId) {
+        return availableBranches;
+    }
+
+    return availableBranches.filter((branch) => String(branch.id) === String(activeBranchId));
+};
 
 const fetchEnergyConsumption = (select, startDate, endDate, branchId = activeBranchId, whereIn = DEFAULT_WHERE_IN) => {
     return $.ajax({
@@ -91,7 +100,7 @@ const processCurrentMonthEnergyConsumption = () => {
 
 
 const processCurrentMonthPerBranchEnergyConsumption = () => {
-    const branches = JSON.parse(dashboardContext?.dataset.branches || '[]');
+    const branches = getVisibleBranches();
     if (!branches.length) return;
 
     const select = `ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption`;
@@ -156,7 +165,7 @@ processCurrentMonthEnergyConsumption();
 processCurrentMonthPerBranchEnergyConsumption();
 
 const processCarbonFootprintPerBranch = () => {
-    const branches = JSON.parse(dashboardContext?.dataset.branches || '[]');
+    const branches = getVisibleBranches();
     if (!branches.length) return;
 
     const select = `ROUND(SUM((end_energy - start_energy)), 2) AS daily_consumption`;

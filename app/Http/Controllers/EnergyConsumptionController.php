@@ -10,20 +10,28 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class EnergyConsumptionController extends Controller
 {
     public function index(Request $request)
     {
+        /** @var User|null $user */
         $user = Auth::user();
         $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $isUserTypeUser = $user && $user->userType && $user->userType->name === 'User';
         $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
-        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
-        $selectedBranchId = $isMultiBranch ? request('branch_id') : $userBranches->first()?->id;
+        $canBrowseAllBranches = !$isAdmin && $isUserTypeUser && $userBranches->isEmpty();
+        $branches = ($isAdmin || $canBrowseAllBranches) ? Branch::orderBy('name')->get() : $userBranches;
+        $isMultiBranch = $isAdmin || $branches->count() > 1 || $canBrowseAllBranches;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $branches->first()?->id;
+
+        if (!$isAdmin && $selectedBranchId && !$branches->pluck('id')->contains((int) $selectedBranchId)) {
+            $selectedBranchId = null;
+        }
 
         return view('pages.energy-consumption')
-            ->with('branches', $userBranches)
+            ->with('branches', $branches)
             ->with('isAdmin', $isAdmin)
             ->with('isMultiBranch', $isMultiBranch)
             ->with('selectedBranchId', $selectedBranchId);

@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Location;
 use App\Models\SensorOffline;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class EnergyConsumptionService
 {
@@ -73,17 +72,29 @@ class EnergyConsumptionService
         // a whereIn clause with field 'location_id' (backwards compatibility).
         $roots = [];
         if (!empty($request->branch_id)) {
-            $roots = Location::query()
-                ->where('branch_id', $request->branch_id)
-                ->whereNull('pid')
-                ->pluck('id')
+            $roots = DB::table('locations as child')
+                ->leftJoin('locations as parent', 'child.pid', '=', 'parent.id')
+                ->where('child.branch_id', $request->branch_id)
+                ->whereNull('child.deleted_at')
+                ->where(function ($query) {
+                    $query->whereNull('child.pid')
+                        ->orWhereNull('parent.branch_id')
+                        ->orWhereColumn('parent.branch_id', '!=', 'child.branch_id');
+                })
+                ->pluck('child.id')
                 ->map(fn ($id) => (int) $id)
                 ->all();
         } elseif (!empty($request->branch_ids) && is_array($request->branch_ids)) {
-            $roots = Location::query()
-                ->whereIn('branch_id', $request->branch_ids)
-                ->whereNull('pid')
-                ->pluck('id')
+            $roots = DB::table('locations as child')
+                ->leftJoin('locations as parent', 'child.pid', '=', 'parent.id')
+                ->whereIn('child.branch_id', $request->branch_ids)
+                ->whereNull('child.deleted_at')
+                ->where(function ($query) {
+                    $query->whereNull('child.pid')
+                        ->orWhereNull('parent.branch_id')
+                        ->orWhereColumn('parent.branch_id', '!=', 'child.branch_id');
+                })
+                ->pluck('child.id')
                 ->map(fn ($id) => (int) $id)
                 ->all();
         } elseif (!empty($request->roots) && is_array($request->roots)) {
