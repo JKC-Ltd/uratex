@@ -26,6 +26,10 @@ class DashboardController extends Controller
         $isMultiBranch = $isAdmin || $branches->count() > 1;
         $selectedBranchId = $isMultiBranch ? $request->branch_id : $branches->first()?->id;
 
+        if ($selectedBranchId !== null && $selectedBranchId !== '' && !$branches->pluck('id')->contains((int) $selectedBranchId)) {
+            $selectedBranchId = null;
+        }
+
         return view('pages.dashboardv2', compact('branches', 'isAdmin', 'isMultiBranch', 'selectedBranchId'));
     }
 

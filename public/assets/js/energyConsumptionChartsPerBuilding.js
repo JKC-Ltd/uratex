@@ -12,8 +12,8 @@ const processChartData = (data, refetch, chartID, dataOptions, columnName) => {
     rows.forEach((row) => {
         const date = row.reading_date;
         const sensorId = Number(row.sensor_id);
-        // const sensorName = row.sensor_description || row.description || `Sensor ${sensorId}`;
-        const sensorName = row.sensor_name || row.sensor_name || `Sensor ${sensorId}`;
+        const sensorName = row.sensor_description || row.description || `Sensor ${sensorId}`;
+        // const sensorName = row.sensor_name || row.sensor_name || `Sensor ${sensorId}`;
         const value = Number(row.daily_consumption) || 0;
 
         byDate[date] = byDate[date] || {};
