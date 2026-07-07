@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
         // $user->save();
         // $request->session()->put('session_token', $token);
 
-        return redirect()->intended(route('dashboardv2', absolute: false));
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

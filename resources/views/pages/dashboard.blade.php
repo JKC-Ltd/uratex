@@ -13,6 +13,7 @@
         <div id="energy-visibility-context"
             data-user-role="{{ $isAdmin ? 'Admin' : 'User' }}"
             data-branch-id="{{ $selectedBranchId ?? '' }}"
+            data-branches="{{ $branches->toJson() }}"
             hidden></div>
 
         {{-- Branch filter (admin or multi-branch users) --}}

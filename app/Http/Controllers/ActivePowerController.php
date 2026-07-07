@@ -16,14 +16,18 @@ class ActivePowerController extends Controller
 {
     public function index(Request $request)
     {
+        /** @var User|null $user */
         $user = Auth::user();
         $isAdmin = $user && $user->userType && $user->userType->name === 'Admin';
+        $isUserTypeUser = $user && $user->userType && $user->userType->name === 'User';
         $userBranches = $isAdmin ? Branch::orderBy('name')->get() : $user->branches()->orderBy('name')->get();
-        $isMultiBranch = $isAdmin || $userBranches->count() > 1;
-        $selectedBranchId = $isMultiBranch ? $request->branch_id : $userBranches->first()?->id;
+        $canBrowseAllBranches = !$isAdmin && $isUserTypeUser && $userBranches->isEmpty();
+        $branches = ($isAdmin || $canBrowseAllBranches) ? Branch::orderBy('name')->get() : $userBranches;
+        $isMultiBranch = $isAdmin || $branches->count() > 1 || $canBrowseAllBranches;
+        $selectedBranchId = $isMultiBranch ? $request->branch_id : $branches->first()?->id;
 
         // For non-admin, ensure the selected branch is within their allowed branches
-        if (!$isAdmin && $selectedBranchId && !$userBranches->pluck('id')->contains((int) $selectedBranchId)) {
+        if (!$isAdmin && $selectedBranchId && !$branches->pluck('id')->contains((int) $selectedBranchId)) {
             $selectedBranchId = null;
         }
 
@@ -33,16 +37,17 @@ class ActivePowerController extends Controller
             $sensorsQuery->whereHas('location', function ($query) use ($selectedBranchId) {
                 $query->where('branch_id', $selectedBranchId);
             });
-        } elseif ($isMultiBranch && !$isAdmin) {
+        } elseif ($isMultiBranch && !$isAdmin && !$canBrowseAllBranches) {
             // Multi-branch user with no specific branch – show all their branches
             $branchIds = $userBranches->pluck('id');
             $sensorsQuery->whereHas('location', function ($query) use ($branchIds) {
                 $query->whereIn('branch_id', $branchIds);
             });
-        } elseif (!$isAdmin) {
+        } elseif (!$isAdmin && !$canBrowseAllBranches) {
             $sensorsQuery->whereRaw('1 = 0');
         }
         // Admin with no branch selected: no filter (show all)
+        // User type "User" with no branch assigned: no filter (show all)
 
         $sensors = $sensorsQuery->get();
         $latestLogAt = null;
@@ -54,8 +59,6 @@ class ActivePowerController extends Controller
         }
 
         $lastUpdate = $latestLogAt ? Carbon::parse($latestLogAt)->format('M j, Y h:i A') : 'N/A';
-        $branches = $userBranches;
-
         return view('pages.active-power')
             ->with('sensors', $sensors)
             ->with('branches', $branches)

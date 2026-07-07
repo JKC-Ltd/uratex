@@ -23,10 +23,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+// Route::get('/dashboard', [DashboardController::class, 'index'])
+//     ->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'indexV2'])
     ->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/dashboardv2', [DashboardController::class, 'indexV2'])
-    ->middleware(['auth', 'verified'])->name('dashboardv2');
 function registerCommonRoutes()
 {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');

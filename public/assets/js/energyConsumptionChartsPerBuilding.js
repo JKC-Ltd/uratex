@@ -13,6 +13,7 @@ const processChartData = (data, refetch, chartID, dataOptions, columnName) => {
         const date = row.reading_date;
         const sensorId = Number(row.sensor_id);
         const sensorName = row.sensor_description || row.description || `Sensor ${sensorId}`;
+        // const sensorName = row.sensor_name || row.sensor_name || `Sensor ${sensorId}`;
         const value = Number(row.daily_consumption) || 0;
 
         byDate[date] = byDate[date] || {};
@@ -124,5 +125,6 @@ const processDailyEnergyConsumptionPerBuilding = () => {
     charts[CHART_ID] = { options: createChartOptions() };
     fetchData(requestPayload, createEmptySeries(), CHART_ID, PROCESS_URL, LABEL_FIELD, processChartData);
 };
+
 
 processDailyEnergyConsumptionPerBuilding();

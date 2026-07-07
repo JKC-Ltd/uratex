@@ -141,9 +141,10 @@
                 const branchSelect = $('select[name="branch_id"]');
                 const locationSelect = $('#location_id');
                 const allLocationOptions = locationSelect.find('option').clone();
+                const initialLocationId = String(locationSelect.val() || '');
 
-                function filterLocations() {
-                    const selectedBranchId = branchSelect.val();
+                function filterLocations(keepInitialSelection = false) {
+                    const selectedBranchId = String(branchSelect.val() || '');
                     
                     // Clear current options except the first one (SELECT LOCATION)
                     locationSelect.find('option:not(:first)').remove();
@@ -164,19 +165,24 @@
                         });
                     }
                     
+                    // Keep old/edit selected location on initial render when still available
+                    if (keepInitialSelection && initialLocationId !== '' && locationSelect.find('option[value="' + initialLocationId + '"]').length) {
+                        locationSelect.val(initialLocationId);
+                    } else {
+                        locationSelect.val('');
+                    }
+
                     // Refresh Select2 to update the dropdown
-                    locationSelect.val('').trigger('change');
+                    locationSelect.trigger('change');
                 }
 
                 // Event listener for branch selection change
                 branchSelect.on('change', function() {
-                    filterLocations();
+                    filterLocations(false);
                 });
 
-                // Initialize on page load if a branch is already selected (for edit mode)
-                if (branchSelect.val() !== '') {
-                    filterLocations();
-                }
+                // Initialize on page load and preserve old/edit location
+                filterLocations(true);
             });
         </script>
     @endsection
